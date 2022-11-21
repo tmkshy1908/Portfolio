@@ -1,20 +1,25 @@
 package infrastructure
 
-// import (
-// 	"github.com/gorilla/mux"
-// 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
-// )
+import (
+	"fmt"
+	"net/http"
 
-// type ControllHandler struct {
-// 	Common *interfaces.CommonController
-// }
+	"github.com/tmkshy1908/Portfolio/interfaces"
+)
 
-// func NewServer(h db.SqlHandler) (handler *mux.Router) {
-// 	// Handler
-// 	ch := &ControllHandler{
-// 		Common: interfaces.NewController(h), // Controller増えるごとに追加
-// 		// Admin: adminController // 初期化されたコントローラー追加
-// 	}
-// 	handler = NewRouter(ch)
-// 	return
-// }
+type ControllHandler struct {
+	CommonController interfaces.Controller
+}
+
+func NewServer() {
+	c := &ControllHandler{
+		CommonController: interfaces.NewController(),
+	}
+
+	NewRouter(c)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
