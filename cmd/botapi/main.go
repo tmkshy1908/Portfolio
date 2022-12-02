@@ -16,11 +16,5 @@ func main() {
 		fmt.Println(db)
 	}
 
-	// srv := &http.Server{
-	// 	Addr: ,
-	// 	Handler: ,
-	// }
-
-	infrastructure.NewServer()
-	// interfaces.SampleHandler()
+	infrastructure.NewServer(db)
 }

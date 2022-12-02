@@ -17,5 +17,6 @@ func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []
 		fmt.Println(err)
 		return
 	}
+
 	return
 }

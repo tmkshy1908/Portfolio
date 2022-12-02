@@ -12,6 +12,10 @@ type CommonConverter interface {
 	ToSampleResponseData([]*domain.Schedule) []*domain.Schedule
 }
 
+func NewConvertController() *ConvertController {
+	return &ConvertController{}
+}
+
 func (cc *ConvertController) ToSampleResponseData(schedule []*domain.Schedule) (items []*domain.Schedule) {
 	items = make([]*domain.Schedule, len(schedule))
 	for i, s := range schedule {
