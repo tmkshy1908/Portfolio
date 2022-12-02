@@ -1,15 +1,11 @@
 package infrastructure
 
 import (
+	"fmt"
 	"net/http"
 )
 
 func NewRouter(controller *ControllHandler) {
-
-	http.HandleFunc("/", controller.CommonController.SayhelloName)
+	fmt.Println("NewRouter")
+	http.HandleFunc("/", controller.CommonController.Sayhello)
 }
-
-// func sayhelloName(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, "Hello")
-
-// }

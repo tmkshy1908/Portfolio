@@ -1,22 +1,43 @@
 package interfaces
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/tmkshy1908/Portfolio/usecase"
 )
 
 type CommonController struct {
-	Interactor Controller
+	Interactor       Controller
+	CommonInteractor usecase.CommonInteractor
+	Converter        ConvertController
 }
 
 type Controller interface {
-	SayhelloName(http.ResponseWriter, *http.Request)
+	Sayhello(http.ResponseWriter, *http.Request)
 }
 
 func NewController() Controller {
 	return &CommonController{}
 }
 
-func (cc *CommonController) SayhelloName(w http.ResponseWriter, r *http.Request) {
+func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello")
+	fmt.Println("SayhelloName")
+}
+
+func (cc *CommonController) SampleHandler(w http.ResponseWriter, r *http.Request) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
+	defer cancel()
+
+	resp, err := cc.CommonInteractor.UseCaseSampleRepository(ctx)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	cc.Converter.ToSampleResponseData(resp)
+
+	return
 }

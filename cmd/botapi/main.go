@@ -22,5 +22,5 @@ func main() {
 	// }
 
 	infrastructure.NewServer()
-
+	// interfaces.SampleHandler()
 }
