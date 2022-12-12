@@ -14,6 +14,7 @@ type CommonRepository struct {
 
 const (
 	SELECT_SCHEDULE string = "select id, day, contents from schedule;"
+	INSERT_SCHEDULE string = "insert into schedule (id, day, contents) values($1,$2,$3)"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedule, err error) {
@@ -40,3 +41,12 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	}
 	return
 }
+
+// func (r *CommonRepository) Create(ctx context.Context) (schedule []*domain.Schedule, err error){
+// 	_, err = r.DB.Exec(ctx, INSERT_SCHEDULE)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	// defer Close()
+
+// }

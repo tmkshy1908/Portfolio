@@ -11,10 +11,7 @@ func main() {
 	db, err := db.NewHandler()
 	if err != nil {
 		fmt.Println(err)
-		return
-	} else {
-		fmt.Println(db)
 	}
-
 	infrastructure.NewServer(db)
+
 }

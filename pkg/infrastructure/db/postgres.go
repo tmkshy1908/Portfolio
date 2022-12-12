@@ -33,7 +33,7 @@ func NewHandler() (h SqlHandler, err error) {
 		Password: "1234",
 	}
 
-	connectionString := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable", conf.User, conf.Database, conf.Password)
+	connectionString := fmt.Sprintf("user=%s dbname=%s password=%s sslmode=disable sslmode=disable", conf.User, conf.Database, conf.Password)
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {

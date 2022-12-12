@@ -46,6 +46,6 @@ func (cc *CommonController) SampleHandler(w http.ResponseWriter, r *http.Request
 		fmt.Println(err)
 		return
 	}
-
+	fmt.Println("SampleHandler")
 	fmt.Println(resp)
 }
