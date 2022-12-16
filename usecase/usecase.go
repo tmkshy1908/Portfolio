@@ -22,5 +22,5 @@ func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []
 }
 
 func (i *CommonInteractor) UseCaseLineRepository(ctx context.Context) {
-	i.CommonRepository.Inform(ctx)
+	i.CommonRepository.DivideEvent(ctx)
 }

@@ -18,7 +18,8 @@ type LineConf struct {
 }
 
 type LineHandller interface {
-	CathEvents(ctx context.Context)
+	CathEvents(ctx context.Context) (e *linebot.Event)
+	CallBack(msg string)
 	StickerReply()
 	ImageReply()
 }
@@ -38,7 +39,7 @@ func NewLineHandller() (lh LineHandller, err error) {
 	return
 }
 
-func (bot *LineConf) CathEvents(ctx context.Context) {
+func (bot *LineConf) CathEvents(ctx context.Context) (e *linebot.Event) {
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
 		fmt.Println(err)
@@ -46,13 +47,15 @@ func (bot *LineConf) CathEvents(ctx context.Context) {
 		fmt.Println("CathEvents")
 	}
 	for _, event := range events {
-		fmt.Println(event)
-		result := "テスト"
-		replyMessage := linebot.NewTextMessage(result)
-		bot.Bot.BroadcastMessage(replyMessage).Do()
+		e = event
 	}
+	return
 }
 
+func (bot *LineConf) CallBack(msg string) {
+	replyMessage := linebot.NewTextMessage(msg)
+	bot.Bot.BroadcastMessage(replyMessage).Do()
+}
 func (bot *LineConf) StickerReply() {
 	result := "良いステッカーだね"
 	replyMessage := linebot.NewTextMessage(result)
