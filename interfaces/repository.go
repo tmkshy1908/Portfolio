@@ -45,21 +45,16 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
-func (r *CommonRepository) DivideEvent(ctx context.Context) {
+func (r *CommonRepository) DivideEvent(ctx context.Context) (e *linebot.Event) {
+	fmt.Println("DivideEve")
 	event := r.Bot.CathEvents(ctx)
-	fmt.Println(event)
-	if event.Type == linebot.EventTypeMessage {
-		switch Message := event.Message.(type) {
-		case *linebot.TextMessage:
-			msg := Message.Text
-			r.Bot.CallBack(msg)
-		}
-	} else {
-		fmt.Println("だめです")
-	}
+	// r.Bot.Hoge(event) エラ〜起きる
+	fmt.Println("DivideEvent", event)
+
+	return
 }
 
-func (r *CommonRepository) ConversionReply(resp []*domain.Schedule) {
-	// 文字列に直す処理
-	// r.Bot.MsgReply(resp)
-}
+// func (r *CommonRepository) ConversionReply(resp []*domain.Schedule) {
+// 	// 文字列に直す処理
+// 	// r.Bot.MsgReply(resp)
+// }

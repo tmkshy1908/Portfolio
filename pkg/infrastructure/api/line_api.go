@@ -19,9 +19,8 @@ type LineConf struct {
 
 type LineHandller interface {
 	CathEvents(ctx context.Context) (e *linebot.Event)
-	CallBack(msg string)
-	StickerReply()
-	ImageReply()
+	MsgReply(msg string)
+	Hoge(event *linebot.Event) (e *linebot.Event)
 }
 
 func NewLineHandller() (lh LineHandller, err error) {
@@ -40,32 +39,54 @@ func NewLineHandller() (lh LineHandller, err error) {
 }
 
 func (bot *LineConf) CathEvents(ctx context.Context) (e *linebot.Event) {
+	fmt.Println("aaaaaaa")
+	// events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
+	// if err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println("CathEvents")
+	// }
+	// for _, event := range events {
+	// 	e = event
+	// }
+	// return
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err, "ParseReq")
 	} else {
 		fmt.Println("CathEvents")
 	}
 	for _, event := range events {
-		e = event
+		if event.Type == linebot.EventTypeMessage {
+			e = event
+		} else {
+			fmt.Println("EventTypeが違う")
+		}
 	}
 	return
 }
 
-func (bot *LineConf) CallBack(msg string) {
+func (bot *LineConf) MsgReply(msg string) {
 	replyMessage := linebot.NewTextMessage(msg)
 	bot.Bot.BroadcastMessage(replyMessage).Do()
 }
-func (bot *LineConf) StickerReply() {
-	result := "良いステッカーだね"
-	replyMessage := linebot.NewTextMessage(result)
-	bot.Bot.BroadcastMessage(replyMessage).Do()
-}
 
-func (bot *LineConf) ImageReply() {
-	result := "素敵な写真だね"
-	replyMessage := linebot.NewTextMessage(result)
-	bot.Bot.BroadcastMessage(replyMessage).Do()
+const (
+	stickerReply string = "いいスタンプだね！"
+	imageReply   string = "素敵な写真だね！"
+)
+
+func (bot *LineConf) Hoge(event *linebot.Event) (e *linebot.Event) {
+	switch event.Message.(type) {
+	case *linebot.TextMessage:
+		e = event
+	case *linebot.StickerMessage:
+		bot.MsgReply(stickerReply)
+
+	case *linebot.ImageMessage:
+		bot.MsgReply(imageReply)
+	}
+	return
 }
 
 // func (l *LineConf) CathEvents(c echo.Context) (e *linebot.Event) {
