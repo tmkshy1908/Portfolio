@@ -5,11 +5,13 @@ import (
 	"fmt"
 
 	"github.com/tmkshy1908/Portfolio/domain"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
 )
 
 type CommonRepository struct {
-	DB db.SqlHandler
+	DB  db.SqlHandler
+	Bot api.LineHandller
 }
 
 const (
@@ -42,11 +44,6 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
-// func (r *CommonRepository) Create(ctx context.Context) (schedule []*domain.Schedule, err error){
-// 	_, err = r.DB.Exec(ctx, INSERT_SCHEDULE)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	// defer Close()
-
-// }
+func (r *CommonRepository) Inform(ctx context.Context) {
+	r.Bot.CathEvents(ctx)
+}

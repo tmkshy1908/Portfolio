@@ -20,3 +20,7 @@ func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []
 
 	return
 }
+
+func (i *CommonInteractor) UseCaseLineRepository(ctx context.Context) {
+	i.CommonRepository.Inform(ctx)
+}

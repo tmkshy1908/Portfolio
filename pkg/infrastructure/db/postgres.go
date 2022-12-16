@@ -40,7 +40,7 @@ func NewHandler() (h SqlHandler, err error) {
 		fmt.Println(err)
 		return
 	} else {
-		fmt.Println("ok")
+		fmt.Println("DB Connected.")
 	}
 
 	h = &SqlConf{Conn: db}

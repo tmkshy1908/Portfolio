@@ -8,4 +8,5 @@ import (
 
 type CommonInteractor interface {
 	UseCaseSampleRepository(context.Context) ([]*domain.Schedule, error)
+	UseCaseLineRepository(ctx context.Context)
 }

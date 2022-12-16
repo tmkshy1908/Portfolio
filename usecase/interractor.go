@@ -8,4 +8,5 @@ import (
 
 type CommonRepository interface {
 	Find(ctx context.Context) (resp []*domain.Schedule, err error)
+	Inform(ctx context.Context)
 }
