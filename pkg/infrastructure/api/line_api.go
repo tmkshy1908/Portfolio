@@ -20,7 +20,6 @@ type LineConf struct {
 type LineHandller interface {
 	CathEvents(ctx context.Context) (msg string)
 	MsgReply(msg string)
-	// Hoge(event *linebot.Event) (e *linebot.Event)
 }
 
 func NewLineHandller() (lh LineHandller, err error) {
@@ -65,42 +64,12 @@ func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
 	return
 }
 
-func (bot *LineConf) MsgReply(msg string) {
-	replyMessage := linebot.NewTextMessage(msg)
-	bot.Bot.BroadcastMessage(replyMessage).Do()
-}
-
 const (
 	stickerReply string = "いいスタンプだね！"
 	imageReply   string = "素敵な写真だね！"
 )
 
-// func (bot *LineConf) Hoge(event *linebot.Event) (e *linebot.Event) {
-// 	switch event.Message.(type) {
-// 	case *linebot.TextMessage:
-// 		e = event
-// 	case *linebot.StickerMessage:
-// 		bot.MsgReply(stickerReply)
-
-// 	case *linebot.ImageMessage:
-// 		bot.MsgReply(imageReply)
-// 	}
-// 	return
-// }
-
-// func (l *LineConf) CathEvents(c echo.Context) (e *linebot.Event) {
-// 	events, err := linebot.ParseRequest(c.Request())
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	for _, event := range events {
-// 		if event.Type == linebot.EventTypeMessage {
-// 			switch message := event.Message.(type) {
-
-// 			case *linebot.TextMessage:
-// 				replyMessage := message.Text
-
-// 			}
-// 		}
-// 	}
-// }
+func (bot *LineConf) MsgReply(msg string) {
+	replyMessage := linebot.NewTextMessage(msg)
+	bot.Bot.BroadcastMessage(replyMessage).Do()
+}

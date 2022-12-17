@@ -15,7 +15,8 @@ func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []
 	// event := i.CommonRepository.DivideEvent(ctx)
 	// msg := event.Message
 	// fmt.Println(msg, "msgだよ")
-
+	msg := i.CommonRepository.DivideEvent(ctx)
+	fmt.Println(msg, "Usecase")
 	resp, err = i.CommonRepository.Find(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -25,10 +26,10 @@ func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []
 	return
 }
 
-func (i *CommonInteractor) UseCaseLineRepository(ctx context.Context) {
-	fmt.Println("LineRep")
-	i.CommonRepository.DivideEvent(ctx)
-	// event := i.CommonRepository.DivideEvent(ctx)
-	// msg := event.Message
-	// fmt.Println(msg, "msgだよ")
-}
+// func (i *CommonInteractor) UseCaseLineRepository(ctx context.Context) {
+// 	fmt.Println("LineRep")
+// i.CommonRepository.DivideEvent(ctx)
+// event := i.CommonRepository.DivideEvent(ctx)
+// msg := event.Message
+// fmt.Println(msg, "msgだよ")
+// }

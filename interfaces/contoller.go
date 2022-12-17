@@ -43,6 +43,7 @@ func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 func (cc *CommonController) SampleHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
+	// ctx = context.WithValue(ctx, "request", r)
 
 	resp, err := cc.Interactor.UseCaseSampleRepository(ctx)
 	if err != nil {
@@ -58,5 +59,5 @@ func (cc *CommonController) LineHandller(w http.ResponseWriter, r *http.Request)
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
 	ctx = context.WithValue(ctx, "request", r)
-	cc.Interactor.UseCaseLineRepository(ctx)
+	cc.Interactor.UseCaseSampleRepository(ctx)
 }

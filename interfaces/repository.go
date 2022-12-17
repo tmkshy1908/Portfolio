@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	// "github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tmkshy1908/Portfolio/domain"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
@@ -51,8 +50,3 @@ func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 
 	return
 }
-
-// func (r *CommonRepository) ConversionReply(resp []*domain.Schedule) {
-// 	// 文字列に直す処理
-// 	// r.Bot.MsgReply(resp)
-// }
