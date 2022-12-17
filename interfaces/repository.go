@@ -46,9 +46,7 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 }
 
 func (r *CommonRepository) DivideEvent(ctx context.Context) (e *linebot.Event) {
-	fmt.Println("DivideEve")
 	event := r.Bot.CathEvents(ctx)
-	// r.Bot.Hoge(event) エラ〜起きる
 	fmt.Println("DivideEvent", event)
 
 	return

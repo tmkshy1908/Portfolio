@@ -20,7 +20,7 @@ type LineConf struct {
 type LineHandller interface {
 	CathEvents(ctx context.Context) (e *linebot.Event)
 	MsgReply(msg string)
-	Hoge(event *linebot.Event) (e *linebot.Event)
+	// Hoge(event *linebot.Event) (e *linebot.Event)
 }
 
 func NewLineHandller() (lh LineHandller, err error) {
@@ -39,26 +39,24 @@ func NewLineHandller() (lh LineHandller, err error) {
 }
 
 func (bot *LineConf) CathEvents(ctx context.Context) (e *linebot.Event) {
-	fmt.Println("aaaaaaa")
-	// events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
-	// if err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println("CathEvents")
-	// }
-	// for _, event := range events {
-	// 	e = event
-	// }
-	// return
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
-		fmt.Println(err, "ParseReq")
+		fmt.Println("ParseReq", err)
 	} else {
 		fmt.Println("CathEvents")
 	}
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
 			e = event
+			switch event.Message.(type) {
+			case *linebot.TextMessage:
+				e = event
+			case *linebot.StickerMessage:
+				bot.MsgReply(stickerReply)
+
+			case *linebot.ImageMessage:
+				bot.MsgReply(imageReply)
+			}
 		} else {
 			fmt.Println("EventTypeが違う")
 		}
@@ -76,18 +74,18 @@ const (
 	imageReply   string = "素敵な写真だね！"
 )
 
-func (bot *LineConf) Hoge(event *linebot.Event) (e *linebot.Event) {
-	switch event.Message.(type) {
-	case *linebot.TextMessage:
-		e = event
-	case *linebot.StickerMessage:
-		bot.MsgReply(stickerReply)
+// func (bot *LineConf) Hoge(event *linebot.Event) (e *linebot.Event) {
+// 	switch event.Message.(type) {
+// 	case *linebot.TextMessage:
+// 		e = event
+// 	case *linebot.StickerMessage:
+// 		bot.MsgReply(stickerReply)
 
-	case *linebot.ImageMessage:
-		bot.MsgReply(imageReply)
-	}
-	return
-}
+// 	case *linebot.ImageMessage:
+// 		bot.MsgReply(imageReply)
+// 	}
+// 	return
+// }
 
 // func (l *LineConf) CathEvents(c echo.Context) (e *linebot.Event) {
 // 	events, err := linebot.ParseRequest(c.Request())
