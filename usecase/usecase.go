@@ -2,7 +2,9 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/tmkshy1908/Portfolio/domain"
 )
@@ -12,15 +14,21 @@ type CommonInteractor struct {
 }
 
 func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []*domain.Schedule, err error) {
-	// event := i.CommonRepository.DivideEvent(ctx)
-	// msg := event.Message
-	// fmt.Println(msg, "msgだよ")
 	msg := i.CommonRepository.DivideEvent(ctx)
 	fmt.Println(msg, "Usecase")
-	resp, err = i.CommonRepository.Find(ctx)
-	if err != nil {
-		fmt.Println(err)
-		return
+	if strings.Contains(msg, "取得") {
+		i.CommonRepository.CallReply(msg)
+		resp, err = i.CommonRepository.Find(ctx)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		a := &resp
+		out, err := json.Marshal(a)
+		if err != nil {
+			fmt.Println("marshal err")
+		}
+		i.CommonRepository.CallReply(string(out))
 	}
 
 	return

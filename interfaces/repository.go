@@ -50,3 +50,7 @@ func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 
 	return
 }
+
+func (r *CommonRepository) CallReply(msg string) {
+	r.Bot.MsgReply(msg)
+}
