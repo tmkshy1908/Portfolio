@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/line/line-bot-sdk-go/linebot"
+	// "github.com/line/line-bot-sdk-go/linebot"
 	"github.com/tmkshy1908/Portfolio/domain"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
@@ -45,9 +45,9 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
-func (r *CommonRepository) DivideEvent(ctx context.Context) (e *linebot.Event) {
-	event := r.Bot.CathEvents(ctx)
-	fmt.Println("DivideEvent", event)
+func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
+	msg = r.Bot.CathEvents(ctx)
+	fmt.Println("DivideEvent", msg)
 
 	return
 }

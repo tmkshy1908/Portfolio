@@ -18,7 +18,7 @@ type LineConf struct {
 }
 
 type LineHandller interface {
-	CathEvents(ctx context.Context) (e *linebot.Event)
+	CathEvents(ctx context.Context) (msg string)
 	MsgReply(msg string)
 	// Hoge(event *linebot.Event) (e *linebot.Event)
 }
@@ -38,7 +38,7 @@ func NewLineHandller() (lh LineHandller, err error) {
 	return
 }
 
-func (bot *LineConf) CathEvents(ctx context.Context) (e *linebot.Event) {
+func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
 		fmt.Println("ParseReq", err)
@@ -47,10 +47,11 @@ func (bot *LineConf) CathEvents(ctx context.Context) (e *linebot.Event) {
 	}
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
-			e = event
-			switch event.Message.(type) {
+
+			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				e = event
+				msg = message.Text
+
 			case *linebot.StickerMessage:
 				bot.MsgReply(stickerReply)
 
