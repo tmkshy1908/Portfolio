@@ -2,20 +2,30 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-
-	"github.com/tmkshy1908/Portfolio/domain"
+	"strings"
 )
 
 type CommonInteractor struct {
 	CommonRepository CommonRepository
 }
 
-func (i *CommonInteractor) UseCaseSampleRepository(ctx context.Context) (resp []*domain.Schedule, err error) {
-	resp, err = i.CommonRepository.Find(ctx)
-	if err != nil {
-		fmt.Println(err)
-		return
+func (i *CommonInteractor) DivideMessage(ctx context.Context) {
+	msg := i.CommonRepository.DivideEvent(ctx)
+	if strings.Contains(msg, "取得") {
+		i.CommonRepository.CallReply(msg)
+		resp, err := i.CommonRepository.Find(ctx)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		a := &resp
+		out, err := json.Marshal(a)
+		if err != nil {
+			fmt.Println("marshal err")
+		}
+		i.CommonRepository.CallReply(string(out))
 	}
 
 	return
