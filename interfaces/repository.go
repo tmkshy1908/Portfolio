@@ -44,6 +44,14 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
+// func (r *CommonRepository) add(ctx context.Context) {
+// 	_, err := r.DB.Exec(ctx, INSERT_SCHEDULE)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// }
+
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 	msg = r.Bot.CathEvents(ctx)
 	fmt.Println("DivideEvent", msg)

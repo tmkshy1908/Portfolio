@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	bot, err := line.NewLineClient()
+	bot, err := line.NewClient()
 	if err != nil {
 		fmt.Println(err)
 	}
