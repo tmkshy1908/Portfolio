@@ -12,7 +12,7 @@ import (
 )
 
 type CommonController struct {
-	controller Controller
+	// controller Controller
 	Interactor CommonInteractor
 }
 
@@ -39,15 +39,7 @@ func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello")
 }
 
-func (cc *CommonController) SampleHandler(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
-	defer cancel()
-
-	cc.Interactor.DivideMessage(ctx)
-}
-
 func (cc *CommonController) LineHandller(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("LineHandller")
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
 	ctx = context.WithValue(ctx, "request", r)
