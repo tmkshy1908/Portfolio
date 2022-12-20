@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/tmkshy1908/Portfolio/interfaces"
-	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/line"
 )
 
 type ControllHandler struct {
@@ -14,7 +14,7 @@ type ControllHandler struct {
 	// 実態にアクセスするために*を使う
 }
 
-func NewServer(h db.SqlHandler, b api.LineHandller) {
+func NewServer(h db.SqlHandler, b line.LineClient) {
 	c := &ControllHandler{
 		CommonController: interfaces.NewController(h, b),
 	}

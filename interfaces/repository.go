@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/tmkshy1908/Portfolio/domain"
-	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/line"
 )
 
 type CommonRepository struct {
 	DB  db.SqlHandler
-	Bot api.LineHandller
+	Bot line.LineClient
 }
 
 const (

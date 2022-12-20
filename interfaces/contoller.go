@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/line"
 	"github.com/tmkshy1908/Portfolio/usecase"
 )
 
@@ -22,7 +22,7 @@ type Controller interface {
 	LineHandller(http.ResponseWriter, *http.Request)
 }
 
-func NewController(SqlHandler db.SqlHandler, LineHandller api.LineHandller) (cc *CommonController) {
+func NewController(SqlHandler db.SqlHandler, LineHandller line.LineClient) (cc *CommonController) {
 	// UseCase interface 構造体の値の初期化
 	cc = &CommonController{
 		Interactor: &usecase.CommonInteractor{
@@ -37,20 +37,13 @@ func NewController(SqlHandler db.SqlHandler, LineHandller api.LineHandller) (cc 
 
 func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello")
-	fmt.Println("SayhelloName")
 }
 
 func (cc *CommonController) SampleHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
 
-	resp, err := cc.Interactor.UseCaseSampleRepository(ctx)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("SampleHandler")
-	fmt.Println(resp)
+	cc.Interactor.DivideMessage(ctx)
 }
 
 func (cc *CommonController) LineHandller(w http.ResponseWriter, r *http.Request) {
@@ -58,5 +51,5 @@ func (cc *CommonController) LineHandller(w http.ResponseWriter, r *http.Request)
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
 	ctx = context.WithValue(ctx, "request", r)
-	cc.Interactor.UseCaseSampleRepository(ctx)
+	cc.Interactor.DivideMessage(ctx)
 }

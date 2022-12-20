@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure"
-	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/api"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/line"
 )
 
 func main() {
-	bot, err := api.NewLineHandller()
+	bot, err := line.NewLineClient()
 	if err != nil {
 		fmt.Println(err)
 	}
