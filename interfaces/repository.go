@@ -54,10 +54,17 @@ func (r *CommonRepository) Add(ctx context.Context, day string, contents string)
 	}
 }
 
+func (r *CommonRepository) Update(ctx context.Context, day string, contents string) {
+	values := fmt.Sprintf("update schedule set day = '%s', contents = '%s' where day = '%s'", day, contents, day)
+	_, err := r.DB.Exec(ctx, values)
+	if err != nil {
+		fmt.Println(err, "Updateえらー")
+		return
+	}
+}
+
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 	msg = r.Bot.CathEvents(ctx)
-	fmt.Println("DivideEvent", msg)
-
 	return
 }
 

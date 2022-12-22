@@ -41,8 +41,6 @@ func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
 		fmt.Println("ParseReq", err)
-	} else {
-		fmt.Println("CathEvents")
 	}
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
