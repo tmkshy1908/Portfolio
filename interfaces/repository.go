@@ -11,12 +11,12 @@ import (
 
 type CommonRepository struct {
 	DB  db.SqlHandler
-	Bot line.LineClient
+	Bot line.Client
 }
 
 const (
 	SELECT_SCHEDULE string = "select id, day, contents from schedule;"
-	INSERT_SCHEDULE string = "insert into schedule (id, day, contents) values($1,$2,$3)"
+	INSERT_SCHEDULE string = "insert into schedule (day, contents) values($1,$2)"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedule, err error) {
@@ -44,13 +44,15 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
-// func (r *CommonRepository) add(ctx context.Context) {
-// 	_, err := r.DB.Exec(ctx, INSERT_SCHEDULE)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-// }
+func (r *CommonRepository) Add(ctx context.Context, day string, contents string) {
+	// schedule := make([]*domain.Schedule, 0)
+	values := fmt.Sprintf("insert into schedule (day, contents) values(%s,'%s')", day, contents)
+	_, err := r.DB.Exec(ctx, values)
+	if err != nil {
+		fmt.Println(err, "Execエラー")
+		return
+	}
+}
 
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 	msg = r.Bot.CathEvents(ctx)

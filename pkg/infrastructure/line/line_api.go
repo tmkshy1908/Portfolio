@@ -17,12 +17,12 @@ type LineConf struct {
 	Bot *linebot.Client
 }
 
-type LineClient interface {
+type Client interface {
 	CathEvents(ctx context.Context) (msg string)
 	MsgReply(msg string)
 }
 
-func NewClient() (lh LineClient, err error) {
+func NewClient() (lh Client, err error) {
 	bot, err := linebot.New(
 		"4a7eaa800c243575a028db8438842246",
 		"P5L9UuMlMuG6sRbGgC0N/rGfICCAZ4P0ixLf7hgomVVyqxHvD5G4ZHNqu7IxpkpYut2LJ5NJ1qgKtCBveIIx4MZGOzuR6ldFGC33TBOXktYbHGhHY7bwQuolurMpN5YW/enP8ZNWUdBjE7PeqGEOswdB04t89/1O/w1cDnyilFU=",

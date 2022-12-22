@@ -5,7 +5,3 @@ type Schedule struct {
 	Day      string
 	Contents string
 }
-
-type ApiValue struct {
-	VALUE string
-}

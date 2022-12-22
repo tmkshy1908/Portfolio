@@ -26,7 +26,11 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 			fmt.Println("marshal err")
 		}
 		i.CommonRepository.CallReply(string(out))
+	} else if strings.Contains(msg, "作成") {
+		i.CommonRepository.CallReply(msg)
+		day := "20221212"
+		contents := "こんにちは"
+		i.CommonRepository.Add(ctx, day, contents)
 	}
 
-	return
 }

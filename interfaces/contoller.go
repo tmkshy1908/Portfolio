@@ -22,7 +22,7 @@ type Controller interface {
 	LineHandller(http.ResponseWriter, *http.Request)
 }
 
-func NewController(SqlHandler db.SqlHandler, LineHandller line.LineClient) (cc *CommonController) {
+func NewController(SqlHandler db.SqlHandler, LineHandller line.Client) (cc *CommonController) {
 	// UseCase interface 構造体の値の初期化
 	cc = &CommonController{
 		Interactor: &usecase.CommonInteractor{
