@@ -6,6 +6,7 @@ import (
 
 	"github.com/tmkshy1908/Portfolio/interfaces"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
+	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/line"
 )
 
 type ControllHandler struct {
@@ -13,9 +14,9 @@ type ControllHandler struct {
 	// 実態にアクセスするために*を使う
 }
 
-func NewServer(h db.SqlHandler) {
+func NewServer(h db.SqlHandler, b line.Client) {
 	c := &ControllHandler{
-		CommonController: interfaces.NewController(h),
+		CommonController: interfaces.NewController(h, b),
 	}
 
 	NewRouter(c)
@@ -23,5 +24,7 @@ func NewServer(h db.SqlHandler) {
 	if err != nil {
 		fmt.Println(err)
 		return
+	} else {
+		fmt.Println("serverOK")
 	}
 }
