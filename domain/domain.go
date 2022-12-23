@@ -1,7 +1,15 @@
 package domain
 
+// type Schedule struct {
+// 	ID       int
+// 	Day      string
+// 	Contents string
+// }
+
 type Schedule struct {
 	ID       int
-	Day      string
+	Month    int
+	Day      int
+	Week     string
 	Contents string
 }

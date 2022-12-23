@@ -15,7 +15,7 @@ type CommonRepository struct {
 }
 
 const (
-	SELECT_SCHEDULE string = "select id, day, contents from schedule;"
+	SELECT_SCHEDULE string = "select * from schedule;"
 	INSERT_SCHEDULE string = "insert into schedule (day, contents) values(%s,'%s')"
 	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
 	DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
@@ -35,7 +35,9 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 		scheduleTable := domain.Schedule{}
 		if err = rows.Scan(
 			&scheduleTable.ID,
+			&scheduleTable.Month,
 			&scheduleTable.Day,
+			&scheduleTable.Week,
 			&scheduleTable.Contents,
 		); err != nil {
 			// fmt.Println(err)
