@@ -50,5 +50,11 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		i.CommonRepository.Update(ctx, day, contents)
 		msg = "更新しました"
 		i.CommonRepository.CallReply(msg)
+
+	} else if strings.Contains(msg, "削除") {
+		day := "20221212"
+		i.CommonRepository.Delete(ctx, day)
+		msg = "削除しました"
+		i.CommonRepository.CallReply(msg)
 	}
 }

@@ -63,6 +63,15 @@ func (r *CommonRepository) Update(ctx context.Context, day string, contents stri
 	}
 }
 
+func (r *CommonRepository) Delete(ctx context.Context, day string) {
+	values := fmt.Sprintf("delete from schedule where day = '%s'", day)
+	_, err := r.DB.Exec(ctx, values)
+	if err != nil {
+		fmt.Println(err, "Deleteエラ〜")
+		return
+	}
+}
+
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 	msg = r.Bot.CathEvents(ctx)
 	return
