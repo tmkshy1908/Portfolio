@@ -18,15 +18,15 @@ type LineConf struct {
 }
 
 type Client interface {
-	CathEvents(ctx context.Context) (msg string)
-	MsgReply(msg string)
-	WaitEvents(ctx context.Context) (day string, contents string)
+	CathEvents(context.Context) string
+	MsgReply(string)
+	WaitEvents(context.Context) (string, string)
 }
 
 func NewClient() (lh Client, err error) {
 	bot, err := linebot.New(
-		"qaZpE0HLQyRNQO3L1L7QBQ+hzgpwUJflVjHILt5TGgYo/ib4gdDHkjHsZNnRTiCUut2LJ5NJ1qgKtCBveIIx4MZGOzuR6ldFGC33TBOXkta1piztcg7piep4V1rCemgIIBCpAODkqQWq2d74AhKH/AdB04t89/1O/w1cDnyilFU=",
-		"b4c80739cd0c020986f94977946f696e",
+		"",
+		"",
 	)
 	if err != nil {
 		fmt.Println("linebot.Newエラー", err)
@@ -40,7 +40,6 @@ func NewClient() (lh Client, err error) {
 
 func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
-	fmt.Println(events)
 	if err != nil {
 		fmt.Println("ParseReq", err)
 	}
