@@ -38,7 +38,7 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 			&scheduleTable.Day,
 			&scheduleTable.Contents,
 		); err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 			return
 		}
 		schedule = append(schedule, &scheduleTable)
@@ -46,31 +46,34 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 	return
 }
 
-func (r *CommonRepository) Add(ctx context.Context, day string, contents string) {
+func (r *CommonRepository) Add(ctx context.Context, day string, contents string) (err error) {
 	values := fmt.Sprintf(INSERT_SCHEDULE, day, contents)
-	_, err := r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
-		fmt.Println(err, "Execエラー")
-		return
+		// fmt.Println(err, "Execエラー")
+		return err
 	}
+	return
 }
 
-func (r *CommonRepository) Update(ctx context.Context, day string, contents string) {
+func (r *CommonRepository) Update(ctx context.Context, day string, contents string) (err error) {
 	values := fmt.Sprintf(UPDATE_SCHEDULE, day, contents, day)
-	_, err := r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
-		fmt.Println(err, "Updateエラー")
-		return
+		// fmt.Println(err, "Updateエラー")
+		return err
 	}
+	return
 }
 
-func (r *CommonRepository) Delete(ctx context.Context, day string) {
+func (r *CommonRepository) Delete(ctx context.Context, day string) (err error) {
 	values := fmt.Sprintf(DELETE_SCHEDULE, day)
-	_, err := r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
-		fmt.Println(err, "Deleteエラー")
-		return
+		// fmt.Println(err, "Deleteエラー")
+		return err
 	}
+	return
 }
 
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
@@ -80,4 +83,9 @@ func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 
 func (r *CommonRepository) CallReply(msg string) {
 	r.Bot.MsgReply(msg)
+}
+
+func (r *CommonRepository) WaitMsg(ctx context.Context) (day string, contents string) {
+	day, contents = r.Bot.WaitEvents(ctx)
+	return
 }

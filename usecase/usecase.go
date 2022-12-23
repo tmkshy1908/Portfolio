@@ -35,9 +35,11 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 
 	} else if strings.Contains(msg, "作成") {
 		i.CommonRepository.CallReply(msg)
-		day := "20221212"
-		contents := "こんにちは"
-		i.CommonRepository.Add(ctx, day, contents)
+		day, contents := i.CommonRepository.WaitMsg(ctx)
+		err := i.CommonRepository.Add(ctx, day, contents)
+		if err != nil {
+			fmt.Println(err)
+		}
 		// i.CommonRepository.CallReply(dayRequestMsg)
 		// day := i.CommonRepository.DivideEvent(ctx)
 		// i.CommonRepository.CallReply(contentsRequestMsg)
@@ -45,16 +47,19 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		// i.CommonRepository.Add(ctx, day, contents)
 
 	} else if strings.Contains(msg, "更新") {
-		day := "20221212"
-		contents := "更新しました"
-		i.CommonRepository.Update(ctx, day, contents)
-		msg = "更新しました"
+		day, contents := i.CommonRepository.WaitMsg(ctx)
+		err := i.CommonRepository.Update(ctx, day, contents)
+		if err != nil {
+			fmt.Println(err)
+		}
 		i.CommonRepository.CallReply(msg)
 
 	} else if strings.Contains(msg, "削除") {
-		day := "20221212"
-		i.CommonRepository.Delete(ctx, day)
-		msg = "削除しました"
+		day, _ := i.CommonRepository.WaitMsg(ctx)
+		err := i.CommonRepository.Delete(ctx, day)
+		if err != nil {
+			fmt.Println(err)
+		}
 		i.CommonRepository.CallReply(msg)
 	}
 }
