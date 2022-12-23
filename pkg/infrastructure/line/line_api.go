@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -25,8 +26,8 @@ type Client interface {
 
 func NewClient() (lh Client, err error) {
 	bot, err := linebot.New(
-		"",
-		"",
+		os.Getenv("CHANNEL_SECRET"),
+		os.Getenv("ACCESS_TOKEN"),
 	)
 	if err != nil {
 		fmt.Println("linebot.Newエラー", err)
