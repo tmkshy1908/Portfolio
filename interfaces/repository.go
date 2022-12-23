@@ -16,7 +16,9 @@ type CommonRepository struct {
 
 const (
 	SELECT_SCHEDULE string = "select id, day, contents from schedule;"
-	INSERT_SCHEDULE string = "insert into schedule (day, contents) values($1,$2)"
+	INSERT_SCHEDULE string = "insert into schedule (day, contents) values(%s,'%s')"
+	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
+	DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedule, err error) {
@@ -45,8 +47,7 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 }
 
 func (r *CommonRepository) Add(ctx context.Context, day string, contents string) {
-	// schedule := make([]*domain.Schedule, 0)
-	values := fmt.Sprintf("insert into schedule (day, contents) values(%s,'%s')", day, contents)
+	values := fmt.Sprintf(INSERT_SCHEDULE, day, contents)
 	_, err := r.DB.Exec(ctx, values)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
@@ -55,19 +56,19 @@ func (r *CommonRepository) Add(ctx context.Context, day string, contents string)
 }
 
 func (r *CommonRepository) Update(ctx context.Context, day string, contents string) {
-	values := fmt.Sprintf("update schedule set day = '%s', contents = '%s' where day = '%s'", day, contents, day)
+	values := fmt.Sprintf(UPDATE_SCHEDULE, day, contents, day)
 	_, err := r.DB.Exec(ctx, values)
 	if err != nil {
-		fmt.Println(err, "Updateえらー")
+		fmt.Println(err, "Updateエラー")
 		return
 	}
 }
 
 func (r *CommonRepository) Delete(ctx context.Context, day string) {
-	values := fmt.Sprintf("delete from schedule where day = '%s'", day)
+	values := fmt.Sprintf(DELETE_SCHEDULE, day)
 	_, err := r.DB.Exec(ctx, values)
 	if err != nil {
-		fmt.Println(err, "Deleteエラ〜")
+		fmt.Println(err, "Deleteエラー")
 		return
 	}
 }
