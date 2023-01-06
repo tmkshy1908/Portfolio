@@ -29,7 +29,7 @@ type SqlHandler interface {
 func NewHandler() (h SqlHandler, err error) {
 	conf := dbSettings{
 		User:     "yamadatarou",
-		Database: "bot_schedule",
+		Database: "line_bot",
 		Password: "1234",
 	}
 

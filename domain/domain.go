@@ -7,9 +7,16 @@ package domain
 // }
 
 type Schedule struct {
-	ID       int
-	Month    int
-	Day      int
-	Week     string
-	Contents string
+	ID           int
+	Day          string
+	ContentsList []*Contents
+}
+
+type Contents struct {
+	ID           int
+	Contents_Day int
+	Location     string
+	EventTile    string
+	Act          string
+	OtherInfo    string
 }

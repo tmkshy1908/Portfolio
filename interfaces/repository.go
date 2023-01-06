@@ -35,10 +35,10 @@ func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedul
 		scheduleTable := domain.Schedule{}
 		if err = rows.Scan(
 			&scheduleTable.ID,
-			&scheduleTable.Month,
+			// &scheduleTable.Month,
 			&scheduleTable.Day,
-			&scheduleTable.Week,
-			&scheduleTable.Contents,
+			// &scheduleTable.Week,
+			// &scheduleTable.Contents,
 		); err != nil {
 			// fmt.Println(err)
 			return
