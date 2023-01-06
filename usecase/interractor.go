@@ -7,7 +7,7 @@ import (
 )
 
 type CommonRepository interface {
-	Find(context.Context) ([]*domain.Schedule, error)
+	Find(context.Context) ([]*domain.Contents, error)
 	Add(context.Context, string, string) error
 	Update(context.Context, string, string) error
 	Delete(context.Context, string) error

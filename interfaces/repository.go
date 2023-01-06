@@ -15,35 +15,37 @@ type CommonRepository struct {
 }
 
 const (
-	SELECT_SCHEDULE string = "select * from schedule;"
+	// SELECT_SCHEDULE string = "select * from schedule;"
+	SELECT_CONTENTS string = "select * from contents;"
 	INSERT_SCHEDULE string = "insert into schedule (day, contents) values(%s,'%s')"
 	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
 	DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
 )
 
-func (r *CommonRepository) Find(ctx context.Context) (schedule []*domain.Schedule, err error) {
-	rows, err := r.DB.Query(ctx, SELECT_SCHEDULE)
+func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Contents, err error) {
+	rows, err := r.DB.Query(ctx, SELECT_CONTENTS)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
 
-	schedule = make([]*domain.Schedule, 0)
+	contents = make([]*domain.Contents, 0)
 
 	for rows.Next() {
-		scheduleTable := domain.Schedule{}
+		contentsTable := domain.Contents{}
 		if err = rows.Scan(
-			&scheduleTable.ID,
-			// &scheduleTable.Month,
-			&scheduleTable.Day,
-			// &scheduleTable.Week,
-			// &scheduleTable.Contents,
+			&contentsTable.ID,
+			&contentsTable.Contents_Day,
+			&contentsTable.Location,
+			&contentsTable.EventTile,
+			&contentsTable.Act,
+			&contentsTable.OtherInfo,
 		); err != nil {
-			// fmt.Println(err)
+			fmt.Println(err)
 			return
 		}
-		schedule = append(schedule, &scheduleTable)
+		contents = append(contents, &contentsTable)
 	}
 	return
 }

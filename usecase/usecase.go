@@ -31,6 +31,7 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		if err != nil {
 			fmt.Println("marshal err")
 		}
+
 		i.CommonRepository.CallReply(string(out))
 
 	} else if strings.Contains(msg, "作成") {
