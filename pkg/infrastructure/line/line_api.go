@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -75,7 +76,11 @@ func (bot *LineConf) MsgReply(msg string) {
 }
 
 func (bot *LineConf) WaitEvents(ctx context.Context) (day string, contents string) {
-	day = "20221212"
+	a := "2022年04月01日" + "T09:00:00+09:00"
+	parsedTime, _ := time.Parse("2006年01月02日T15:04:05Z07:00", a)
+	fmt.Println(parsedTime)
 	contents = "こんにちは"
 	return
 }
+
+// func (bot *LineConf)

@@ -87,6 +87,7 @@ func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 
 func (r *CommonRepository) CallReply(msg string) {
 	r.Bot.MsgReply(msg)
+	fmt.Printf("%T\n", msg)
 }
 
 func (r *CommonRepository) WaitMsg(ctx context.Context) (day string, contents string) {

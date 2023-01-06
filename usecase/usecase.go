@@ -33,6 +33,7 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		}
 
 		i.CommonRepository.CallReply(string(out))
+		fmt.Printf("%T\n", out)
 
 	} else if strings.Contains(msg, "作成") {
 		i.CommonRepository.CallReply(msg)
