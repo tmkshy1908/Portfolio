@@ -8,10 +8,10 @@ import (
 
 type CommonRepository interface {
 	Find(context.Context) ([]*domain.Contents, error)
-	Add(context.Context, string, string) error
+	Add(context.Context, *domain.Contents) error
 	Update(context.Context, string, string) error
 	Delete(context.Context, string) error
 	DivideEvent(context.Context) string
 	CallReply(string)
-	WaitMsg(context.Context) (string, string)
+	WaitMsg(context.Context) (*domain.Contents, error)
 }

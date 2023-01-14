@@ -5,16 +5,15 @@ import (
 )
 
 type Schedule struct {
-	ID           int
-	Day          string
-	ContentsList []*Contents
+	ID  int
+	Day string
 }
 
 type Contents struct {
 	ID           int
 	Contents_Day time.Time
 	Location     string
-	EventTile    string
+	EventTitle   string
 	Act          string
 	OtherInfo    string
 }
