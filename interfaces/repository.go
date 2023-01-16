@@ -17,7 +17,7 @@ type CommonRepository struct {
 const (
 	// SELECT_SCHEDULE string = "select * from schedule;"
 	SELECT_CONTENTS string = "select * from contents;"
-	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(TO_DATE(%s, 'YY-MM-DD'),'%s','%s','%s','%s')"
+	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s')"
 	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
 	// DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
 	DELETE_CONTENTS string = "delete from contents where day = '%s'"
@@ -55,7 +55,7 @@ func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (
 	fmt.Println(&contents)
 	fmt.Println(contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
 	// contentsTable := make([]*domain.Contents,0)
-	value := fmt.Sprintf("insert into schedule (day) values (TO_DATE(%s, 'YY-MM-DD')", contents.Contents_Day)
+	value := fmt.Sprintf("insert into schedule (day) values (TO_DATE('%s', 'YY-MM-DD HH24:MI:SS'))", contents.Contents_Day)
 	_, err = r.DB.Exec(ctx, value)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
