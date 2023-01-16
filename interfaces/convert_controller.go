@@ -20,9 +20,9 @@ func (cc *ConvertController) ToSampleResponseData(schedule []*domain.Schedule) (
 	items = make([]*domain.Schedule, len(schedule))
 	for i, s := range schedule {
 		items[i] = &domain.Schedule{
-			ID:       s.ID,
-			Day:      s.Day,
-			Contents: s.Contents,
+			ID:  s.ID,
+			Day: s.Day,
+			// Contents: s.Contents,
 		}
 	}
 	return

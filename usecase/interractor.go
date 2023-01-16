@@ -7,7 +7,11 @@ import (
 )
 
 type CommonRepository interface {
-	Find(ctx context.Context) (resp []*domain.Schedule, err error)
-	DivideEvent(ctx context.Context) (msg string)
-	CallReply(msg string)
+	Find(context.Context) ([]*domain.Contents, error)
+	Add(context.Context, *domain.Contents) error
+	Update(context.Context, string, string) error
+	Delete(context.Context, string) error
+	DivideEvent(context.Context) string
+	CallReply(string)
+	WaitMsg(context.Context) (*domain.Contents, error)
 }

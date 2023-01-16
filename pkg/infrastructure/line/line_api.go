@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -17,15 +18,16 @@ type LineConf struct {
 	Bot *linebot.Client
 }
 
-type LineClient interface {
-	CathEvents(ctx context.Context) (msg string)
-	MsgReply(msg string)
+type Client interface {
+	CathEvents(context.Context) string
+	MsgReply(string)
+	WaitEvents(context.Context) (string, string, string, string, string)
 }
 
-func NewClient() (lh LineClient, err error) {
+func NewClient() (lh Client, err error) {
 	bot, err := linebot.New(
-		"4a7eaa800c243575a028db8438842246",
-		"P5L9UuMlMuG6sRbGgC0N/rGfICCAZ4P0ixLf7hgomVVyqxHvD5G4ZHNqu7IxpkpYut2LJ5NJ1qgKtCBveIIx4MZGOzuR6ldFGC33TBOXktYbHGhHY7bwQuolurMpN5YW/enP8ZNWUdBjE7PeqGEOswdB04t89/1O/w1cDnyilFU=",
+		os.Getenv("CHANNEL_SECRET"),
+		os.Getenv("ACCESS_TOKEN"),
 	)
 	if err != nil {
 		fmt.Println("linebot.Newエラー", err)
@@ -41,8 +43,6 @@ func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
 	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
 	if err != nil {
 		fmt.Println("ParseReq", err)
-	} else {
-		fmt.Println("CathEvents")
 	}
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
@@ -72,4 +72,13 @@ const (
 func (bot *LineConf) MsgReply(msg string) {
 	replyMessage := linebot.NewTextMessage(msg)
 	bot.Bot.BroadcastMessage(replyMessage).Do()
+}
+
+func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
+	day = "22-04-01"
+	location = "渋谷"
+	title = "TAROUふぇすてぃばる"
+	act = "山田太郎　田中たろう　TaroSakamoto"
+	info = "20:00 START"
+	return
 }

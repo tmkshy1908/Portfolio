@@ -14,7 +14,7 @@ type ControllHandler struct {
 	// 実態にアクセスするために*を使う
 }
 
-func NewServer(h db.SqlHandler, b line.LineClient) {
+func NewServer(h db.SqlHandler, b line.Client) {
 	c := &ControllHandler{
 		CommonController: interfaces.NewController(h, b),
 	}
