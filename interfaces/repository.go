@@ -3,7 +3,6 @@ package interfaces
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/tmkshy1908/Portfolio/domain"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
@@ -18,7 +17,7 @@ type CommonRepository struct {
 const (
 	// SELECT_SCHEDULE string = "select * from schedule;"
 	SELECT_CONTENTS string = "select * from contents;"
-	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(%s,'%s','%s','%s','%s');"
+	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(TO_DATE(%s, 'YY-MM-DD'),'%s','%s','%s','%s')"
 	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
 	// DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
 	DELETE_CONTENTS string = "delete from contents where day = '%s'"
@@ -56,7 +55,7 @@ func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (
 	fmt.Println(&contents)
 	fmt.Println(contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
 	// contentsTable := make([]*domain.Contents,0)
-	value := fmt.Sprintf("insert into schedule (day) values (%s);", contents.Contents_Day)
+	value := fmt.Sprintf("insert into schedule (day) values (TO_DATE(%s, 'YY-MM-DD')", contents.Contents_Day)
 	_, err = r.DB.Exec(ctx, value)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
@@ -102,10 +101,10 @@ func (r *CommonRepository) CallReply(msg string) {
 
 func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Contents, err error) {
 	day, location, title, act, info := r.Bot.WaitEvents(ctx)
-	a := day + "T00:00:00"
-	contents_day, _ := time.Parse("2006年01月02日T15:04:00", a)
-	fmt.Println(contents_day)
-	contents = &domain.Contents{Contents_Day: contents_day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
+	// contents_day := day + " 00:00:00"
+	// contents_day, _ := time.Parse("2006年01月02日T15:04:05Z07:00", a)
+	fmt.Println(day)
+	contents = &domain.Contents{Contents_Day: day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
 	// contents = append(contents, &contentsTable)
 	return
 }

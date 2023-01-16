@@ -75,7 +75,7 @@ func (bot *LineConf) MsgReply(msg string) {
 }
 
 func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
-	day = "2022年04月01日"
+	day = "22-04-01"
 	location = "渋谷"
 	title = "TAROUふぇすてぃばる"
 	act = "山田太郎　田中たろう　TaroSakamoto"
