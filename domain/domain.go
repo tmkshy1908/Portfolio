@@ -14,3 +14,7 @@ type Contents struct {
 	Act          string
 	OtherInfo    string
 }
+
+type ApiValue struct {
+	VALUE string
+}

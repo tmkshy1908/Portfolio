@@ -92,6 +92,7 @@ func (r *CommonRepository) Delete(ctx context.Context, day string) (err error) {
 
 func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
 	msg = r.Bot.CathEvents(ctx)
+
 	return
 }
 
