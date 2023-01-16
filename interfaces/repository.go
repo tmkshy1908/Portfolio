@@ -74,7 +74,7 @@ func (r *CommonRepository) Update(ctx context.Context, day string, contents stri
 	values := fmt.Sprintf(UPDATE_SCHEDULE, day, contents, day)
 	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
-		// fmt.Println(err, "Updateエラー")
+		fmt.Println(err, "Updateエラー")
 		return err
 	}
 	return
@@ -84,7 +84,7 @@ func (r *CommonRepository) Delete(ctx context.Context, day string) (err error) {
 	values := fmt.Sprintf(DELETE_CONTENTS, day)
 	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
-		// fmt.Println(err, "Deleteエラー")
+		fmt.Println(err, "Deleteエラー")
 		return err
 	}
 	return

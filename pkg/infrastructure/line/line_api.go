@@ -82,5 +82,3 @@ func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location strin
 	info = "20:00 START"
 	return
 }
-
-// func (bot *LineConf)
