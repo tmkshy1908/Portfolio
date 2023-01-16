@@ -31,12 +31,17 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		if err != nil {
 			fmt.Println("marshal err")
 		}
+
 		i.CommonRepository.CallReply(string(out))
+		fmt.Printf("%T\n", out)
 
 	} else if strings.Contains(msg, "作成") {
 		i.CommonRepository.CallReply(msg)
-		day, contents := i.CommonRepository.WaitMsg(ctx)
-		err := i.CommonRepository.Add(ctx, day, contents)
+		resp, err := i.CommonRepository.WaitMsg(ctx)
+		if err != nil {
+			fmt.Println(err, "WaitMsgエラー")
+		}
+		err = i.CommonRepository.Add(ctx, resp)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -47,19 +52,19 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		// i.CommonRepository.Add(ctx, day, contents)
 
 	} else if strings.Contains(msg, "更新") {
-		day, contents := i.CommonRepository.WaitMsg(ctx)
-		err := i.CommonRepository.Update(ctx, day, contents)
-		if err != nil {
-			fmt.Println(err)
-		}
+		// day, contents := i.CommonRepository.WaitMsg(ctx)
+		// err := i.CommonRepository.Update(ctx, day, contents)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 		i.CommonRepository.CallReply(msg)
 
 	} else if strings.Contains(msg, "削除") {
-		day, _ := i.CommonRepository.WaitMsg(ctx)
-		err := i.CommonRepository.Delete(ctx, day)
-		if err != nil {
-			fmt.Println(err)
-		}
+		// day, _ := i.CommonRepository.WaitMsg(ctx)
+		// err := i.CommonRepository.Delete(ctx, day)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 		i.CommonRepository.CallReply(msg)
 	}
 }

@@ -21,7 +21,7 @@ type LineConf struct {
 type Client interface {
 	CathEvents(context.Context) string
 	MsgReply(string)
-	WaitEvents(context.Context) (string, string)
+	WaitEvents(context.Context) (string, string, string, string, string)
 }
 
 func NewClient() (lh Client, err error) {
@@ -74,8 +74,11 @@ func (bot *LineConf) MsgReply(msg string) {
 	bot.Bot.BroadcastMessage(replyMessage).Do()
 }
 
-func (bot *LineConf) WaitEvents(ctx context.Context) (day string, contents string) {
-	day = "20221212"
-	contents = "こんにちは"
+func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
+	day = "22-04-01"
+	location = "渋谷"
+	title = "TAROUふぇすてぃばる"
+	act = "山田太郎　田中たろう　TaroSakamoto"
+	info = "20:00 START"
 	return
 }
