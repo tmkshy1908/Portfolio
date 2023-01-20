@@ -120,3 +120,10 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 // 	}
 // 	t = true
 // }
+
+func (r *CommonRepository) TestTest(ctx context.Context) {
+	for i := 0; i < 5; i++ {
+		r.Bot.TestFunc(ctx)
+	}
+	fmt.Println("ループ処理終わり")
+}

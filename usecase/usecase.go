@@ -72,5 +72,9 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 			fmt.Println(err)
 		}
 		i.CommonRepository.CallReply(msg)
+
+	} else if strings.Contains(msg, "test") {
+		i.CommonRepository.TestTest(ctx)
+		i.CommonRepository.CallReply(msg)
 	}
 }

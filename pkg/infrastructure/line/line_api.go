@@ -22,6 +22,7 @@ type Client interface {
 	CathEvents(context.Context) string
 	MsgReply(string)
 	WaitEvents(context.Context) (string, string, string, string, string)
+	TestFunc(context.Context) string
 }
 
 func NewClient() (lh Client, err error) {
@@ -75,10 +76,41 @@ func (bot *LineConf) MsgReply(msg string) {
 }
 
 func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
+	// c := &domain.Contents{}
 	day = "22-04-09 00:00:00"
 	location = "渋谷"
 	title = "TAROUふぇすてぃばる"
 	act = "山田太郎　田中たろう　TaroSakamoto"
 	info = "20:00 START"
 	return
+}
+
+func (bot *LineConf) TestFunc(ctx context.Context) (a string) {
+
+	// a := [5]string{}
+
+	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
+	if err != nil {
+		fmt.Println("ParseReq", err)
+	}
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				a = message.Text
+				fmt.Println(a)
+
+			case *linebot.StickerMessage:
+				bot.MsgReply(stickerReply)
+
+			case *linebot.ImageMessage:
+				bot.MsgReply(imageReply)
+			}
+		} else {
+			fmt.Println("EventTypeが違う")
+		}
+	}
+	return
+
 }

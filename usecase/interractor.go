@@ -14,4 +14,5 @@ type CommonRepository interface {
 	DivideEvent(context.Context) string
 	CallReply(string)
 	WaitMsg(context.Context) (*domain.Contents, error)
+	TestTest(context.Context)
 }
