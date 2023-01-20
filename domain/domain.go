@@ -14,3 +14,8 @@ type Contents struct {
 	Act          string
 	OtherInfo    string
 }
+
+type User struct {
+	UserId    string
+	Condition int
+}

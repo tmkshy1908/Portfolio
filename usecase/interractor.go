@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/tmkshy1908/Portfolio/domain"
 )
@@ -11,8 +12,8 @@ type CommonRepository interface {
 	Add(context.Context, *domain.Contents) error
 	Update(context.Context, *domain.Contents) error
 	Delete(context.Context, *domain.Contents) error
-	DivideEvent(context.Context) string
+	DivideEvent(context.Context, *http.Request) string
 	CallReply(string)
 	WaitMsg(context.Context) (*domain.Contents, error)
-	TestTest(context.Context)
+	TestTest(context.Context, *http.Request)
 }

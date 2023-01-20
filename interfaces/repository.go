@@ -3,6 +3,7 @@ package interfaces
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/tmkshy1908/Portfolio/domain"
 	"github.com/tmkshy1908/Portfolio/pkg/infrastructure/db"
@@ -90,8 +91,8 @@ func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents
 	return
 }
 
-func (r *CommonRepository) DivideEvent(ctx context.Context) (msg string) {
-	msg = r.Bot.CathEvents(ctx)
+func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string) {
+	msg = r.Bot.CathEvents(ctx, req)
 
 	return
 }
@@ -121,9 +122,9 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 // 	t = true
 // }
 
-func (r *CommonRepository) TestTest(ctx context.Context) {
+func (r *CommonRepository) TestTest(ctx context.Context, req *http.Request) {
 	for i := 0; i < 5; i++ {
-		r.Bot.TestFunc(ctx)
+		r.Bot.TestFunc(ctx, req)
 	}
 	fmt.Println("ループ処理終わり")
 }

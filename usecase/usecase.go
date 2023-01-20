@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -16,9 +17,11 @@ type CommonInteractor struct {
 // 	contentsRequestMsg string = "内容を入力してください"
 // )
 
-func (i *CommonInteractor) DivideMessage(ctx context.Context) {
-	msg := i.CommonRepository.DivideEvent(ctx)
-
+func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request) {
+	msg := i.CommonRepository.DivideEvent(ctx, req)
+	// if strings.Contains(msg, "編集") {
+	// msg = "編集モードです"
+	// i.CommonRepository.CallReply(msg)
 	if strings.Contains(msg, "取得") {
 		i.CommonRepository.CallReply(msg)
 		resp, err := i.CommonRepository.Find(ctx)
@@ -74,7 +77,9 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		i.CommonRepository.CallReply(msg)
 
 	} else if strings.Contains(msg, "test") {
-		i.CommonRepository.TestTest(ctx)
+		i.CommonRepository.TestTest(ctx, req)
 		i.CommonRepository.CallReply(msg)
 	}
+	// }
+
 }

@@ -19,10 +19,11 @@ type LineConf struct {
 }
 
 type Client interface {
-	CathEvents(context.Context) string
+	CathEvents(context.Context, *http.Request) string
 	MsgReply(string)
 	WaitEvents(context.Context) (string, string, string, string, string)
-	TestFunc(context.Context) string
+	CathID(context.Context, *http.Request) string
+	TestFunc(context.Context, *http.Request) string
 }
 
 func NewClient() (lh Client, err error) {
@@ -35,18 +36,24 @@ func NewClient() (lh Client, err error) {
 	} else {
 		fmt.Println("Api Connected.")
 	}
+	// a := bot.GetProfile()
+	// fmt.Println(a)
 	lh = &LineConf{Bot: bot}
 
 	return
 }
 
-func (bot *LineConf) CathEvents(ctx context.Context) (msg string) {
-	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
+func (bot *LineConf) CathEvents(ctx context.Context, req *http.Request) (msg string) {
+	events, err := bot.Bot.ParseRequest(req)
 	if err != nil {
 		fmt.Println("ParseReq", err)
 	}
 	for _, event := range events {
+
 		if event.Type == linebot.EventTypeMessage {
+			a := event.Source.UserID
+			fmt.Println(a, "userID")
+			fmt.Printf("%T\n", a)
 
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
@@ -85,11 +92,24 @@ func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location strin
 	return
 }
 
-func (bot *LineConf) TestFunc(ctx context.Context) (a string) {
+func (bot *LineConf) CathID(ctx context.Context, req *http.Request) (id string) {
+	events, err := bot.Bot.ParseRequest(req)
+	if err != nil {
+		fmt.Println(err, "CathID")
+	}
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			id = event.Source.UserID
+			// fmt.Println(a, "userID")
+			// fmt.Printf("%T\n", a)
+		}
+	}
+	return
+}
 
-	// a := [5]string{}
+func (bot *LineConf) TestFunc(ctx context.Context, req *http.Request) (a string) {
 
-	events, err := bot.Bot.ParseRequest(ctx.Value("request").(*http.Request))
+	events, err := bot.Bot.ParseRequest(req)
 	if err != nil {
 		fmt.Println("ParseReq", err)
 	}
