@@ -18,9 +18,9 @@ const (
 	// SELECT_SCHEDULE string = "select * from schedule;"
 	SELECT_CONTENTS string = "select * from contents;"
 	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s')"
-	UPDATE_SCHEDULE string = "update schedule set day = '%s', contents = '%s' where day = '%s'"
-	// DELETE_SCHEDULE string = "delete from schedule where day = '%s'"
-	DELETE_CONTENTS string = "delete from contents where day = '%s'"
+	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s') "
+	DELETE_CONTENTS string = "delete from contents where contents_day = TO_DATE('%s', 'YY-MM-DD')"
+	DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Contents, err error) {
@@ -70,8 +70,8 @@ func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (
 	return
 }
 
-func (r *CommonRepository) Update(ctx context.Context, day string, contents string) (err error) {
-	values := fmt.Sprintf(UPDATE_SCHEDULE, day, contents, day)
+func (r *CommonRepository) Update(ctx context.Context, contents *domain.Contents) (err error) {
+	values := fmt.Sprintf(UPDATE_CONTENTS, contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
 	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
 		fmt.Println(err, "Updateエラー")
@@ -80,8 +80,8 @@ func (r *CommonRepository) Update(ctx context.Context, day string, contents stri
 	return
 }
 
-func (r *CommonRepository) Delete(ctx context.Context, day string) (err error) {
-	values := fmt.Sprintf(DELETE_CONTENTS, day)
+func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents) (err error) {
+	values := fmt.Sprintf(DELETE_CONTENTS, contents.Contents_Day)
 	_, err = r.DB.Exec(ctx, values)
 	if err != nil {
 		fmt.Println(err, "Deleteエラー")
@@ -109,3 +109,14 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 	// contents = append(contents, &contentsTable)
 	return
 }
+
+// func (r *CommonRepository) dayCheck(ctx context.Context, day string) {
+// 	values := fmt.Sprintf(DAY_CHECK, day)
+// 	_, err := r.DB.Exec(ctx,values)
+// 	if err != nil {
+// 		fmt.Println("Create Execエラー:", err)
+// 		t = false
+// 		return
+// 	}
+// 	t = true
+// }

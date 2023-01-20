@@ -52,19 +52,25 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context) {
 		// i.CommonRepository.Add(ctx, day, contents)
 
 	} else if strings.Contains(msg, "更新") {
-		// day, contents := i.CommonRepository.WaitMsg(ctx)
-		// err := i.CommonRepository.Update(ctx, day, contents)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
+		resp, err := i.CommonRepository.WaitMsg(ctx)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = i.CommonRepository.Update(ctx, resp)
+		if err != nil {
+			fmt.Println(err)
+		}
 		i.CommonRepository.CallReply(msg)
 
 	} else if strings.Contains(msg, "削除") {
-		// day, _ := i.CommonRepository.WaitMsg(ctx)
-		// err := i.CommonRepository.Delete(ctx, day)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
+		resp, err := i.CommonRepository.WaitMsg(ctx)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = i.CommonRepository.Delete(ctx, resp)
+		if err != nil {
+			fmt.Println(err)
+		}
 		i.CommonRepository.CallReply(msg)
 	}
 }
