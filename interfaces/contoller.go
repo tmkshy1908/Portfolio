@@ -39,9 +39,8 @@ func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello")
 }
 
-func (cc *CommonController) LineHandller(w http.ResponseWriter, r *http.Request) {
+func (cc *CommonController) LineHandller(w http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
-	ctx = context.WithValue(ctx, "request", r)
-	cc.Interactor.DivideMessage(ctx)
+	cc.Interactor.DivideMessage(ctx, req)
 }
