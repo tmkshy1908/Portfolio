@@ -22,6 +22,7 @@ const (
 	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s') "
 	DELETE_CONTENTS string = "delete from contents where contents_day = TO_DATE('%s', 'YY-MM-DD')"
 	DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
+	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Contents, err error) {
@@ -123,8 +124,31 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 // }
 
 func (r *CommonRepository) TestTest(ctx context.Context, req *http.Request) {
-	for i := 0; i < 5; i++ {
-		r.Bot.TestFunc(ctx, req)
-	}
-	fmt.Println("ループ処理終わり")
+	// for i := 0; i < 5; i++ {
+	// 	r.Bot.TestFunc(ctx, req)
+	// }
+	// a := "Contents"
+	// b := "Location"
+	// c := "新宿"
+	// values := fmt.Sprintf(TEST_CHECK, a, b, c)
+	// // fmt.Println((values))
+	// // aa := domain.Contents{}
+	// rows, err := r.DB.Query(ctx, values)
+	// if err != nil {
+	// 	fmt.Println(err, "TestCheck ERROR")
+	// 	return
+	// }
+	// for rows.Next(){
+	// 	contents := domain.Contents{}
+	// 	err = rows.Scan(&contents.ID, &contents.Contents_Day, &contents.Location,&contents.EventTitle, &contents.Act, &contents.OtherInfo)
+	// 	if err != nil{
+	// 		fmt.Println(err,"ScanError")
+	// 	}
+
+	// }
+	// if aa == nil {
+	// 	fmt.Println("値なし")
+	// }
+	// fmt.Println(aa)
+	// fmt.Println("ループ処理終わり")
 }
