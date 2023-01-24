@@ -56,6 +56,7 @@ func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Content
 func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (err error) {
 	fmt.Println(&contents)
 	fmt.Println(contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
+
 	// contentsTable := make([]*domain.Contents,0)saa
 	value := fmt.Sprintf("insert into schedule (day) values (TO_DATE('%s', 'YY-MM-DD HH24:MI:SS'))", contents.Contents_Day)
 	_, err = r.DB.Exec(ctx, value)
