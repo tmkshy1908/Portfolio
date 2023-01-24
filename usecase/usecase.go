@@ -15,7 +15,7 @@ type CommonInteractor struct {
 // const (
 // 	dayRequestMsg      string = "日付を入力してください"
 // 	contentsRequestMsg string = "内容を入力してください"
-// aa
+// aaa
 // )
 
 func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request) {
