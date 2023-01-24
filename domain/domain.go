@@ -15,6 +15,7 @@ type Contents struct {
 	OtherInfo    string
 }
 
-type ApiValue struct {
-	VALUE string
+type User struct {
+	UserId    string
+	Condition int
 }
