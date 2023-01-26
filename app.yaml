@@ -1,3 +1,4 @@
+
 runtime: go118
 
 main: cmd/botapi
@@ -6,3 +7,4 @@ handlers:
   # All URLs are handled by the Go application script
   - url: /.*
     script: auto
+
