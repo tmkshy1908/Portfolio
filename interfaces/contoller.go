@@ -37,6 +37,7 @@ func NewController(SqlHandler db.SqlHandler, LineHandller line.Client) (cc *Comm
 
 func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "💩💩💩")
+	// a
 }
 
 func (cc *CommonController) LineHandller(w http.ResponseWriter, req *http.Request) {
