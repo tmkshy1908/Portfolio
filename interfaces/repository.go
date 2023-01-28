@@ -110,6 +110,7 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 	fmt.Println(day)
 	contents = &domain.Contents{Contents_Day: day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
 	// contents = append(contents, &contentsTable)
+	// a
 	return
 }
 
