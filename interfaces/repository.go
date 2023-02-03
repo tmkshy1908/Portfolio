@@ -22,7 +22,8 @@ const (
 	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s') "
 	DELETE_CONTENTS string = "delete from contents where contents_day = TO_DATE('%s', 'YY-MM-DD')"
 	DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
-	USER_CHECK      string = "elect * from users where user_id = '%s'"
+	USER_CHECK      string = "select count(user_id) from users where user_id = '%s'"
+	INSERT_USERS    string = "insert into users (user_id, condition) values('%s',%b)"
 	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
@@ -112,14 +113,24 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 	return
 }
 
-// func (r *CommonRepository) UserCheck(ctx context.Context, userId string) () {
-// 	values := fmt.Sprintf(USER_CHECK, userId)
-// 	_, err := r.DB.Exec(ctx, values)
-// 	if err != nil {
-// 		fmt.Println("Create Execエラー:", err)
-// 		return
-// 	}
-// }
+func (r *CommonRepository) UserCheck(ctx context.Context, userId string) {
+	values := fmt.Sprintf(USER_CHECK, userId)
+	var i int
+	err := r.DB.QueryRow(ctx, values).Scan(&i)
+	if err != nil {
+		fmt.Println(err, "クエリ")
+	}
+	if i == 0 {
+		values = fmt.Sprintf(INSERT_USERS, userId, 0)
+		fmt.Println(values)
+		_, err = r.DB.Exec(ctx, values)
+		if err != nil {
+			fmt.Println(err, "eku")
+		}
+	} else {
+		fmt.Println("登録されています")
+	}
+}
 
 // func (r *CommonRepository) dayCheck(ctx context.Context, day string) {
 // 	values := fmt.Sprintf(DAY_CHECK, day)

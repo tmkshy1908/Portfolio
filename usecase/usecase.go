@@ -78,7 +78,7 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request)
 
 	} else if strings.Contains(msg, "test") {
 		i.CommonRepository.TestTest(ctx, req)
-		i.CommonRepository.CallReply(msg, userId)
+		i.CommonRepository.UserCheck(ctx, userId)
 	}
 	// }
 
