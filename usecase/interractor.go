@@ -12,8 +12,8 @@ type CommonRepository interface {
 	Add(context.Context, *domain.Contents) error
 	Update(context.Context, *domain.Contents) error
 	Delete(context.Context, *domain.Contents) error
-	DivideEvent(context.Context, *http.Request) string
-	CallReply(string)
+	DivideEvent(context.Context, *http.Request) (string, string)
+	CallReply(string, string)
 	WaitMsg(context.Context) (*domain.Contents, error)
 	TestTest(context.Context, *http.Request)
 }

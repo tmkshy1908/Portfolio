@@ -22,6 +22,7 @@ const (
 	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s') "
 	DELETE_CONTENTS string = "delete from contents where contents_day = TO_DATE('%s', 'YY-MM-DD')"
 	DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
+	USER_CHECK      string = "elect * from users where user_id = '%s'"
 	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
@@ -93,25 +94,32 @@ func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents
 	return
 }
 
-func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string) {
-	msg = r.Bot.CathEvents(ctx, req)
+func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string, userId string) {
+	msg, userId = r.Bot.CathEvents(ctx, req)
+	fmt.Println(userId)
 
 	return
 }
 
-func (r *CommonRepository) CallReply(msg string) {
-	r.Bot.MsgReply(msg)
+func (r *CommonRepository) CallReply(msg string, userId string) {
+	r.Bot.MsgReply(msg, userId)
 }
 
 func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Contents, err error) {
 	day, location, title, act, info := r.Bot.WaitEvents(ctx)
-	// contents_day := day + " 00:00:00"
-	// contents_day, _ := time.Parse("2006年01月02日T15:04:05Z07:00", a)
 	fmt.Println(day)
 	contents = &domain.Contents{Contents_Day: day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
-	// contents = append(contents, &contentsTable)
 	return
 }
+
+// func (r *CommonRepository) UserCheck(ctx context.Context, userId string) () {
+// 	values := fmt.Sprintf(USER_CHECK, userId)
+// 	_, err := r.DB.Exec(ctx, values)
+// 	if err != nil {
+// 		fmt.Println("Create Execエラー:", err)
+// 		return
+// 	}
+// }
 
 // func (r *CommonRepository) dayCheck(ctx context.Context, day string) {
 // 	values := fmt.Sprintf(DAY_CHECK, day)
@@ -125,6 +133,7 @@ func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Conten
 // }
 
 func (r *CommonRepository) TestTest(ctx context.Context, req *http.Request) {
+
 	// for i := 0; i < 5; i++ {
 	// 	r.Bot.TestFunc(ctx, req)
 	// }

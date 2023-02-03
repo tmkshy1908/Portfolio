@@ -15,7 +15,7 @@ type Contents struct {
 	OtherInfo    string
 }
 
-type User struct {
-	UserId    string
+type Users struct {
+	User_Id   string
 	Condition int
 }
