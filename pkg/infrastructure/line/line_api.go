@@ -5,14 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
-
-// type apiConnection struct {
-// 	ChannelSecrets string
-// 	AccessToken    string
-// }
 
 type LineConf struct {
 	Bot *linebot.Client
@@ -21,7 +17,7 @@ type LineConf struct {
 type Client interface {
 	CathEvents(context.Context, *http.Request) (string, string)
 	MsgReply(string, string)
-	WaitEvents(context.Context) (string, string, string, string, string)
+	WaitEvents(context.Context) (time.Time, string, string, string, string)
 	CathID(*http.Request) string
 	TestFunc(context.Context, *http.Request) string
 }
@@ -86,9 +82,10 @@ func (bot *LineConf) MsgReply(msg string, userId string) {
 	// bot.Bot.BroadcastMessage(replyMessage).Do()
 }
 
-func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
-	// c := &domain.Contents{}
-	day = "22-04-09 00:00:00"
+func (bot *LineConf) WaitEvents(ctx context.Context) (day time.Time, location string, title string, act string, info string) {
+	str := "2020/03/23"
+	layout := "2006/01/02"
+	day, _ = time.Parse(layout, str)
 	location = "渋谷"
 	title = "TAROUふぇすてぃばる"
 	act = "山田太郎　田中たろう　TaroSakamoto"
