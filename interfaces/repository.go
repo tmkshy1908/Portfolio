@@ -24,7 +24,8 @@ const (
 	DELETE_CONTENTS string = "delete from contents where contents_day = $1"
 	DAY_CHECK       string = "select * from test where day = $1,"
 	USER_CHECK      string = "select count(user_id) from users where user_id = $1"
-	INSERT_USERS    string = "insert into users (user_id, condition) values($1,$2)"
+	CONDITION_CHECK string = "select condition from users where user_id = $1"
+	INSERT_USERS    string = "insert into users (user_id, condition) values($1,NULL)"
 	DELETE_USERS    string = "delete from users where user_id = $1"
 	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
@@ -148,44 +149,18 @@ func (r *CommonRepository) EndUser(ctx context.Context, userId string) {
 	}
 }
 
-// func (r *CommonRepository) dayCheck(ctx context.Context, day string) {
-// 	values := fmt.Sprintf(DAY_CHECK, day)
-// 	_, err := r.DB.Exec(ctx,values)
-// 	if err != nil {
-// 		fmt.Println("Create Execエラー:", err)
-// 		t = false
-// 		return
-// 	}
-// 	t = true
-// }
-
-func (r *CommonRepository) TestTest(ctx context.Context, req *http.Request) {
-
-	// for i := 0; i < 5; i++ {
-	// 	r.Bot.TestFunc(ctx, req)
-	// }
-	// a := "Contents"
-	// b := "Location"
-	// c := "新宿"
-	// values := fmt.Sprintf(TEST_CHECK, a, b, c)
-	// // fmt.Println((values))
-	// // aa := domain.Contents{}
-	// rows, err := r.DB.Query(ctx, values)
-	// if err != nil {
-	// 	fmt.Println(err, "TestCheck ERROR")
-	// 	return
-	// }
-	// for rows.Next(){
-	// 	contents := domain.Contents{}
-	// 	err = rows.Scan(&contents.ID, &contents.Contents_Day, &contents.Location,&contents.EventTitle, &contents.Act, &contents.OtherInfo)
-	// 	if err != nil{
-	// 		fmt.Println(err,"ScanError")
-	// 	}
-
-	// }
-	// if aa == nil {
-	// 	fmt.Println("値なし")
-	// }
-	// fmt.Println(aa)
-	// fmt.Println("ループ処理終わり")
+func (r *CommonRepository) ConditionCheck(ctx context.Context, userId string) bool {
+	var i int
+	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
+	if err != nil {
+		fmt.Println(err, "クエリ")
+	}
+	// fmt.Println(i)
+	if i == 0 {
+		fmt.Println("condition:nil")
+		return true
+	} else {
+		fmt.Println("oooooooooo")
+		return false
+	}
 }

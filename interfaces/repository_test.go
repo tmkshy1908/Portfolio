@@ -27,7 +27,7 @@ type dbSettings struct {
 
 var DB *sql.DB
 
-func testHandler() {
+func Test_handler(t *testing.T) {
 	conf := dbSettings{
 		User:     "yamadatarou",
 		Database: "test_bot",
@@ -45,39 +45,29 @@ func testHandler() {
 	}
 }
 
-func Test_Xxx(t *testing.T) {
-	testHandler()
-	str := "2020/03/19"
-	layout := "2006/01/02"
-	tt, _ := time.Parse(layout, str)
-	fmt.Printf("%T\n", tt)
-	contents := &Contents{Contents_Day: tt, Location: "池袋", EventTitle: "イベントイベント", Act: "吉田ヨシダ　田中たなか　岡田okada", OtherInfo: "19:00 end"}
-	fmt.Println(contents)
-	Add(contents)
-	Find()
-	Update(contents)
-	Delete(contents)
-}
-
 const (
-	SELECT_TEST string = "select * from test_contents;"
-	INSERT_TEST string = "insert into test_contents (contents_day,location,title,act,info) values ($1,$2,$3,$4,$5)"
-	UPDATE_TEST string = "update test_contents set (contents_day, location, title, act,info) values($1,$2,$3,$4,$5) where contents_day = $1"
-	DELETE_TEST string = "delete from test_contents where contents_day = $1)"
+	SELECT_TEST string = "select contents_day,location, title, act, info from test_contents;"
+	INSERT_TEST string = "insert into test_contents (contents_day,location,title,act,info) values ($1,$2,$3,$4,$5);"
+	UPDATE_TEST string = "update test_contents set  act = $2 where contents_day = $1;"
+	DELETE_TEST string = "delete from test_contents where contents_day = $1;"
 	// DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
 	// USER_CHECK      string = "select count(user_id) from users where user_id = '%s'"
 	// INSERT_USERS    string = "insert into users (user_id, condition) values('%s',%b)"
 	// TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
-func Add(contents *Contents) {
+func Test_add(t *testing.T) {
+	str := "2020/03/19"
+	layout := "2006/01/02"
+	tt, _ := time.Parse(layout, str)
+	contents := &Contents{Contents_Day: tt, Location: "池袋", EventTitle: "イベントイベント", Act: "吉田ヨシダ　田中たなか　岡田okada", OtherInfo: "19:00 end"}
 	_, err := DB.Exec(INSERT_TEST, contents.Contents_Day, contents.Location, contents.EventTitle, contents.Act, contents.OtherInfo)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
 	}
 }
 
-func Find() {
+func Test_find(t *testing.T) {
 	rows, err := DB.Query(SELECT_TEST)
 	if err != nil {
 		fmt.Println(err)
@@ -103,14 +93,21 @@ func Find() {
 	fmt.Println(contents)
 }
 
-func Update(contents *Contents) {
-	_, err := DB.Exec(UPDATE_TEST, &contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
+func Test_update(t *testing.T) {
+	str := "2020/03/19"
+	layout := "2006/01/02"
+	tt, _ := time.Parse(layout, str)
+	contents := &Contents{Contents_Day: tt, Location: "池袋", EventTitle: "イベントイベント", Act: "アップデートしました", OtherInfo: "19:00 end"}
+	_, err := DB.Exec(UPDATE_TEST, contents.Contents_Day, contents.Act)
 	if err != nil {
 		fmt.Println(err, "Updateエラー")
 	}
 }
-func Delete(contents *Contents) {
-	_, err := DB.Exec(DELETE_TEST, contents.Contents_Day)
+func Test_delete(t *testing.T) {
+	str := "2020/03/19"
+	layout := "2006/01/02"
+	tt, _ := time.Parse(layout, str)
+	_, err := DB.Exec(DELETE_TEST, tt)
 	if err != nil {
 		fmt.Println(err, "Deleteエラー")
 	}
