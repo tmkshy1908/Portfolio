@@ -149,18 +149,11 @@ func (r *CommonRepository) EndUser(ctx context.Context, userId string) {
 	}
 }
 
-func (r *CommonRepository) ConditionCheck(ctx context.Context, userId string) bool {
-	var i int
-	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
+func (r *CommonRepository) ConditionCheck(ctx context.Context, userId string) (cNumber int) {
+	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&cNumber)
 	if err != nil {
 		fmt.Println(err, "クエリ")
 	}
-	// fmt.Println(i)
-	if i == 0 {
-		fmt.Println("condition:nil")
-		return true
-	} else {
-		fmt.Println("oooooooooo")
-		return false
-	}
+	fmt.Println(cNumber)
+	return cNumber
 }
