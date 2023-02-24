@@ -16,12 +16,17 @@ type CommonRepository struct {
 }
 
 const (
-	// SELECT_SCHEDULE string = "select * from schedule;"
 	SELECT_CONTENTS string = "select * from contents;"
-	INSERT_CONTENTS string = "insert into contents (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s')"
-	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values(TO_DATE('%s', 'YY-MM-DD'),'%s','%s','%s','%s') "
-	DELETE_CONTENTS string = "delete from contents where contents_day = TO_DATE('%s', 'YY-MM-DD')"
-	DAY_CHECK       string = "select * from test where day = TO_DATE($1, 'YY-MM-DD HH24:MI:SS')"
+	INSERT_CONTENTS string = "insert into  contents (contents_day, location, event_title, act, other_info) values($1,$2,$3,$4,$5)"
+	INSERT_SCHEDULE string = "insert into schedule (day) values ($1)"
+	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) = ($1,$2,$3,$4,$5) where contents_day = $1"
+	DELETE_SCHEDULE string = "delete from schedule where day = $1"
+	DELETE_CONTENTS string = "delete from contents where contents_day = $1"
+	DAY_CHECK       string = "select * from test where day = $1,"
+	USER_CHECK      string = "select count(user_id) from users where user_id = $1"
+	CONDITION_CHECK string = "select condition from users where user_id = $1"
+	INSERT_USERS    string = "insert into users (user_id, condition) values($1,$2)"
+	DELETE_USERS    string = "delete from users where user_id = $1"
 	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
@@ -54,18 +59,12 @@ func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Content
 }
 
 func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (err error) {
-	fmt.Println(&contents)
-	fmt.Println(contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
-
-	// contentsTable := make([]*domain.Contents,0)saa
-	value := fmt.Sprintf("insert into schedule (day) values (TO_DATE('%s', 'YY-MM-DD HH24:MI:SS'))", contents.Contents_Day)
-	_, err = r.DB.Exec(ctx, value)
+	_, err = r.DB.Exec(ctx, INSERT_SCHEDULE, contents.Contents_Day)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
 		return err
 	}
-	values := fmt.Sprintf(INSERT_CONTENTS, contents.Contents_Day, contents.Location, contents.EventTitle, contents.Act, contents.OtherInfo)
-	_, err = r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, INSERT_CONTENTS, contents.Contents_Day, contents.Location, contents.EventTitle, contents.Act, contents.OtherInfo)
 	if err != nil {
 		fmt.Println(err, "Execエラー")
 		return err
@@ -74,8 +73,7 @@ func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (
 }
 
 func (r *CommonRepository) Update(ctx context.Context, contents *domain.Contents) (err error) {
-	values := fmt.Sprintf(UPDATE_CONTENTS, contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
-	_, err = r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, UPDATE_CONTENTS, contents.Contents_Day, contents.EventTitle, contents.Location, contents.Act, contents.OtherInfo)
 	if err != nil {
 		fmt.Println(err, "Updateエラー")
 		return err
@@ -84,8 +82,12 @@ func (r *CommonRepository) Update(ctx context.Context, contents *domain.Contents
 }
 
 func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents) (err error) {
-	values := fmt.Sprintf(DELETE_CONTENTS, contents.Contents_Day)
-	_, err = r.DB.Exec(ctx, values)
+	_, err = r.DB.Exec(ctx, DELETE_CONTENTS, contents.Contents_Day)
+	if err != nil {
+		fmt.Println(err, "Deleteエラー")
+		return err
+	}
+	_, err = r.DB.Exec(ctx, DELETE_SCHEDULE, contents.Contents_Day)
 	if err != nil {
 		fmt.Println(err, "Deleteエラー")
 		return err
@@ -93,64 +95,64 @@ func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents
 	return
 }
 
-func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string) {
-	msg = r.Bot.CathEvents(ctx, req)
+func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string, userId string) {
+	msg, userId = r.Bot.CathEvents(ctx, req)
+	// fmt.Println(userId)
 
 	return
 }
 
-func (r *CommonRepository) CallReply(msg string) {
-	r.Bot.MsgReply(msg)
+func (r *CommonRepository) CallReply(msg string, userId string) {
+	r.Bot.MsgReply(msg, userId)
 }
 
 func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Contents, err error) {
 	day, location, title, act, info := r.Bot.WaitEvents(ctx)
-	// contents_day := day + " 00:00:00"
-	// contents_day, _ := time.Parse("2006年01月02日T15:04:05Z07:00", a)
-	fmt.Println(day)
 	contents = &domain.Contents{Contents_Day: day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
-	// contents = append(contents, &contentsTable)
-	// a
 	return
 }
 
-// func (r *CommonRepository) dayCheck(ctx context.Context, day string) {
-// 	values := fmt.Sprintf(DAY_CHECK, day)
-// 	_, err := r.DB.Exec(ctx,values)
-// 	if err != nil {
-// 		fmt.Println("Create Execエラー:", err)
-// 		t = false
-// 		return
-// 	}
-// 	t = true
-// }
+func (r *CommonRepository) UserCheck(ctx context.Context, userId string) bool {
+	var i int
+	// UserIdが登録されているかのチェック i=0 は登録なし i=1 は登録ずみ
+	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
+	if err != nil {
+		fmt.Println(err, "クエリ")
+	}
+	if i == 0 {
+		return false
+	} else {
+		return true
+	}
+}
 
-func (r *CommonRepository) TestTest(ctx context.Context, req *http.Request) {
-	// for i := 0; i < 5; i++ {
-	// 	r.Bot.TestFunc(ctx, req)
-	// }
-	// a := "Contents"
-	// b := "Location"
-	// c := "新宿"
-	// values := fmt.Sprintf(TEST_CHECK, a, b, c)
-	// // fmt.Println((values))
-	// // aa := domain.Contents{}
-	// rows, err := r.DB.Query(ctx, values)
-	// if err != nil {
-	// 	fmt.Println(err, "TestCheck ERROR")
-	// 	return
-	// }
-	// for rows.Next(){
-	// 	contents := domain.Contents{}
-	// 	err = rows.Scan(&contents.ID, &contents.Contents_Day, &contents.Location,&contents.EventTitle, &contents.Act, &contents.OtherInfo)
-	// 	if err != nil{
-	// 		fmt.Println(err,"ScanError")
-	// 	}
+func (r *CommonRepository) StartUser(ctx context.Context, userId string) {
+	var i int
+	// UserIdが登録されているかのチェック i=0 は登録なし i=1 は登録ずみ
+	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
+	if err != nil {
+		fmt.Println(err, "StartUser:QueryRow")
+	}
+	if i == 0 {
+		_, err := r.DB.Exec(ctx, INSERT_USERS, userId, 0)
+		if err != nil {
+			fmt.Println(err, "StartUser:Exec")
+		}
+	}
+}
 
-	// }
-	// if aa == nil {
-	// 	fmt.Println("値なし")
-	// }
-	// fmt.Println(aa)
-	// fmt.Println("ループ処理終わり")
+func (r *CommonRepository) EndUser(ctx context.Context, userId string) {
+	_, err := r.DB.Exec(ctx, DELETE_USERS, userId)
+	if err != nil {
+		fmt.Println(err, "EndUser")
+	}
+}
+
+func (r *CommonRepository) ConditionCheck(ctx context.Context, userId string) (cNumber int) {
+	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&cNumber)
+	if err != nil {
+		fmt.Println(err, "クエリ")
+	}
+	fmt.Println(cNumber)
+	return cNumber
 }
