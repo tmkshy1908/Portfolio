@@ -5,24 +5,20 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
-
-// type apiConnection struct {
-// 	ChannelSecrets string
-// 	AccessToken    string
-// }
 
 type LineConf struct {
 	Bot *linebot.Client
 }
 
 type Client interface {
-	CathEvents(context.Context, *http.Request) string
-	MsgReply(string)
-	WaitEvents(context.Context) (string, string, string, string, string)
-	CathID(context.Context, *http.Request) string
+	CathEvents(context.Context, *http.Request) (string, string)
+	MsgReply(string, string)
+	WaitEvents(context.Context) (time.Time, string, string, string, string)
+	CathID(*http.Request) string
 	TestFunc(context.Context, *http.Request) string
 }
 
@@ -43,7 +39,7 @@ func NewClient() (lh Client, err error) {
 	return
 }
 
-func (bot *LineConf) CathEvents(ctx context.Context, req *http.Request) (msg string) {
+func (bot *LineConf) CathEvents(ctx context.Context, req *http.Request) (msg string, userId string) {
 	events, err := bot.Bot.ParseRequest(req)
 	if err != nil {
 		fmt.Println("ParseReq", err)
@@ -51,19 +47,20 @@ func (bot *LineConf) CathEvents(ctx context.Context, req *http.Request) (msg str
 	for _, event := range events {
 
 		if event.Type == linebot.EventTypeMessage {
-			a := event.Source.UserID
-			fmt.Println(a, "userID")
-			fmt.Printf("%T\n", a)
+			userId = event.Source.UserID
 
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				msg = message.Text
+				if _, err := bot.Bot.PushMessage(userId, linebot.NewTextMessage(msg)).Do(); err != nil {
+					fmt.Println(err, "プッシュエラー")
+				}
 
 			case *linebot.StickerMessage:
-				bot.MsgReply(stickerReply)
+				bot.MsgReply(stickerReply, userId)
 
 			case *linebot.ImageMessage:
-				bot.MsgReply(imageReply)
+				bot.MsgReply(imageReply, userId)
 			}
 		} else {
 			fmt.Println("EventTypeが違う")
@@ -77,14 +74,18 @@ const (
 	imageReply   string = "素敵な写真だね！"
 )
 
-func (bot *LineConf) MsgReply(msg string) {
-	replyMessage := linebot.NewTextMessage(msg)
-	bot.Bot.BroadcastMessage(replyMessage).Do()
+func (bot *LineConf) MsgReply(msg string, userId string) {
+	if _, err := bot.Bot.PushMessage(userId, linebot.NewTextMessage(msg)).Do(); err != nil {
+		fmt.Println(err, "プッシュエラー")
+	}
+	// replyMessage := linebot.NewTextMessage(msg)
+	// bot.Bot.BroadcastMessage(replyMessage).Do()
 }
 
-func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location string, title string, act string, info string) {
-	// c := &domain.Contents{}
-	day = "22-04-09 00:00:00"
+func (bot *LineConf) WaitEvents(ctx context.Context) (day time.Time, location string, title string, act string, info string) {
+	str := "2020/03/23"
+	layout := "2006/01/02"
+	day, _ = time.Parse(layout, str)
 	location = "渋谷"
 	title = "TAROUふぇすてぃばる"
 	act = "山田太郎　田中たろう　TaroSakamoto"
@@ -92,16 +93,14 @@ func (bot *LineConf) WaitEvents(ctx context.Context) (day string, location strin
 	return
 }
 
-func (bot *LineConf) CathID(ctx context.Context, req *http.Request) (id string) {
+func (bot *LineConf) CathID(req *http.Request) (userId string) {
 	events, err := bot.Bot.ParseRequest(req)
 	if err != nil {
 		fmt.Println(err, "CathID")
 	}
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
-			id = event.Source.UserID
-			// fmt.Println(a, "userID")
-			// fmt.Printf("%T\n", a)
+			userId = event.Source.UserID
 		}
 	}
 	return
@@ -122,10 +121,10 @@ func (bot *LineConf) TestFunc(ctx context.Context, req *http.Request) (a string)
 				fmt.Println(a)
 
 			case *linebot.StickerMessage:
-				bot.MsgReply(stickerReply)
+				// bot.MsgReply(stickerReply)
 
 			case *linebot.ImageMessage:
-				bot.MsgReply(imageReply)
+				// bot.MsgReply(imageReply)
 			}
 		} else {
 			fmt.Println("EventTypeが違う")
