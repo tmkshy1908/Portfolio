@@ -18,5 +18,5 @@ type CommonRepository interface {
 	UserCheck(context.Context, string) bool
 	StartUser(context.Context, string)
 	EndUser(context.Context, string)
-	TestTest(context.Context, *http.Request)
+	// TestTest(context.Context, *http.Request)
 }
