@@ -12,7 +12,7 @@ import (
 )
 
 type CommonController struct {
-	// controller Controller
+	// controller Controlle
 	Interactor CommonInteractor
 }
 

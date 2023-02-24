@@ -19,13 +19,13 @@ const (
 	SELECT_CONTENTS string = "select * from contents;"
 	INSERT_CONTENTS string = "insert into  contents (contents_day, location, event_title, act, other_info) values($1,$2,$3,$4,$5)"
 	INSERT_SCHEDULE string = "insert into schedule (day) values ($1)"
-	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) values($1,$2,$3,$4,$5) where contents_day = $1"
+	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) = ($1,$2,$3,$4,$5) where contents_day = $1"
 	DELETE_SCHEDULE string = "delete from schedule where day = $1"
 	DELETE_CONTENTS string = "delete from contents where contents_day = $1"
 	DAY_CHECK       string = "select * from test where day = $1,"
 	USER_CHECK      string = "select count(user_id) from users where user_id = $1"
 	CONDITION_CHECK string = "select condition from users where user_id = $1"
-	INSERT_USERS    string = "insert into users (user_id, condition) values($1,NULL)"
+	INSERT_USERS    string = "insert into users (user_id, condition) values($1,$2)"
 	DELETE_USERS    string = "delete from users where user_id = $1"
 	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
@@ -108,7 +108,6 @@ func (r *CommonRepository) CallReply(msg string, userId string) {
 
 func (r *CommonRepository) WaitMsg(ctx context.Context) (contents *domain.Contents, err error) {
 	day, location, title, act, info := r.Bot.WaitEvents(ctx)
-	fmt.Println(day)
 	contents = &domain.Contents{Contents_Day: day, Location: location, EventTitle: title, Act: act, OtherInfo: info}
 	return
 }
