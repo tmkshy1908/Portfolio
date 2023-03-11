@@ -42,5 +42,10 @@ func (cc *CommonController) Sayhello(w http.ResponseWriter, r *http.Request) {
 func (cc *CommonController) LineHandller(w http.ResponseWriter, req *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 180*time.Second)
 	defer cancel()
+	// fmt.Printf("%T\n", req.Header)
+
+	// dump, _ := httputil.DumpRequestOut(req, true)
+	// fmt.Printf("%s", dump)
+
 	cc.Interactor.DivideMessage(ctx, req)
 }

@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type CommonInteractor struct {
@@ -16,6 +18,23 @@ type CommonInteractor struct {
 // 	dayRequestMsg      string = "日付を入力してください"
 // 	contentsRequestMsg string = "内容を入力してください"
 // )
+type Event struct {
+	ReplyToken        string
+	Type              interface{}
+	Mode              interface{}
+	Timestamp         time.Time
+	Source            interface{}
+	Message           interface{} `json:"message"`
+	Joined            interface{}
+	Left              interface{}
+	Postback          interface{}
+	Beacon            interface{}
+	AccountLink       interface{}
+	Things            interface{}
+	Members           interface{}
+	Unsend            interface{}
+	VideoPlayComplete interface{}
+}
 
 func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request) {
 	msg, userId := i.CommonRepository.DivideEvent(ctx, req)
@@ -84,8 +103,19 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request)
 			i.CommonRepository.CallReply(msg, userId)
 
 		} else if strings.Contains(msg, "test") {
-			// i.CommonRepository.TestTest(ctx, req)
-			i.CommonRepository.UserCheck(ctx, userId)
+			resp, err := http.Get("https://3517-240d-0-4b77-6a00-78b6-f3a5-c59c-d96f.jp.ngrok.io/line")
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(resp.StatusCode)
+			fmt.Println(resp.Header["Content-Type"])
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				fmt.Println(err, "ioutilllllllll")
+			}
+			fmt.Print(string(body))
+
 		}
 	}
 	// i.CommonRepository.CallReply(msg, userId)
