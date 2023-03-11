@@ -42,8 +42,6 @@ func Newinit() (ts *test_st) {
 }
 
 func Test_DivideMessage(t *testing.T) {
-	// r := &http.Request{}
-
 	reqBody := bytes.NewBufferString("request body")
 	req := httptest.NewRequest(http.MethodGet, "http://dummy.url.com/user", reqBody)
 	ts := Newinit()

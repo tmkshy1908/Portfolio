@@ -112,7 +112,7 @@ func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request)
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			if err != nil {
-				fmt.Println(err, "ioutilllllllll")
+				fmt.Println(err, "ioutil")
 			}
 			fmt.Print(string(body))
 
