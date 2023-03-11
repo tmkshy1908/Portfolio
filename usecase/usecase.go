@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"time"
 )
 
 type CommonInteractor struct {
@@ -18,23 +17,6 @@ type CommonInteractor struct {
 // 	dayRequestMsg      string = "日付を入力してください"
 // 	contentsRequestMsg string = "内容を入力してください"
 // )
-type Event struct {
-	ReplyToken        string
-	Type              interface{}
-	Mode              interface{}
-	Timestamp         time.Time
-	Source            interface{}
-	Message           interface{} `json:"message"`
-	Joined            interface{}
-	Left              interface{}
-	Postback          interface{}
-	Beacon            interface{}
-	AccountLink       interface{}
-	Things            interface{}
-	Members           interface{}
-	Unsend            interface{}
-	VideoPlayComplete interface{}
-}
 
 func (i *CommonInteractor) DivideMessage(ctx context.Context, req *http.Request) {
 	msg, userId := i.CommonRepository.DivideEvent(ctx, req)
