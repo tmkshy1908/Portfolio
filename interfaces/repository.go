@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -16,18 +17,16 @@ type CommonRepository struct {
 }
 
 const (
-	SELECT_CONTENTS string = "select * from contents;"
+	SELECT_CONTENTS string = "select contents_day, location, event_title, act, other_info from contents;"
 	INSERT_CONTENTS string = "insert into  contents (contents_day, location, event_title, act, other_info) values($1,$2,$3,$4,$5)"
 	INSERT_SCHEDULE string = "insert into schedule (day) values ($1)"
 	UPDATE_CONTENTS string = "update contents set (contents_day, location, event_title, act, other_info) = ($1,$2,$3,$4,$5) where contents_day = $1"
 	DELETE_SCHEDULE string = "delete from schedule where day = $1"
 	DELETE_CONTENTS string = "delete from contents where contents_day = $1"
-	DAY_CHECK       string = "select * from test where day = $1,"
 	USER_CHECK      string = "select count(user_id) from users where user_id = $1"
 	CONDITION_CHECK string = "select condition from users where user_id = $1"
 	INSERT_USERS    string = "insert into users (user_id, condition) values($1,$2)"
 	DELETE_USERS    string = "delete from users where user_id = $1"
-	TEST_CHECK      string = "select * from %s where %s = '%s'"
 )
 
 func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Contents, err error) {
@@ -59,16 +58,19 @@ func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Content
 }
 
 func (r *CommonRepository) Add(ctx context.Context, contents *domain.Contents) (err error) {
-	_, err = r.DB.Exec(ctx, INSERT_SCHEDULE, contents.Contents_Day)
-	if err != nil {
-		fmt.Println(err, "Execエラー")
+	err = r.DB.ExecWithTx(func(*sql.Tx) error {
+		_, err = r.DB.Exec(ctx, INSERT_SCHEDULE, contents.Contents_Day)
+		if err != nil {
+			fmt.Println(err, "Execエラー")
+			return err
+		}
+		_, err = r.DB.Exec(ctx, INSERT_CONTENTS, contents.Contents_Day, contents.Location, contents.EventTitle, contents.Act, contents.OtherInfo)
+		if err != nil {
+			fmt.Println(err, "Execエラー")
+			return err
+		}
 		return err
-	}
-	_, err = r.DB.Exec(ctx, INSERT_CONTENTS, contents.Contents_Day, contents.Location, contents.EventTitle, contents.Act, contents.OtherInfo)
-	if err != nil {
-		fmt.Println(err, "Execエラー")
-		return err
-	}
+	})
 	return
 }
 
@@ -82,23 +84,24 @@ func (r *CommonRepository) Update(ctx context.Context, contents *domain.Contents
 }
 
 func (r *CommonRepository) Delete(ctx context.Context, contents *domain.Contents) (err error) {
-	_, err = r.DB.Exec(ctx, DELETE_CONTENTS, contents.Contents_Day)
-	if err != nil {
-		fmt.Println(err, "Deleteエラー")
+	err = r.DB.ExecWithTx(func(*sql.Tx) error {
+		_, err = r.DB.Exec(ctx, DELETE_CONTENTS, contents.Contents_Day)
+		if err != nil {
+			fmt.Println(err, "Deleteエラー")
+			return err
+		}
+		_, err = r.DB.Exec(ctx, DELETE_SCHEDULE, contents.Contents_Day)
+		if err != nil {
+			fmt.Println(err, "Deleteエラー")
+			return err
+		}
 		return err
-	}
-	_, err = r.DB.Exec(ctx, DELETE_SCHEDULE, contents.Contents_Day)
-	if err != nil {
-		fmt.Println(err, "Deleteエラー")
-		return err
-	}
+	})
 	return
 }
 
 func (r *CommonRepository) DivideEvent(ctx context.Context, req *http.Request) (msg string, userId string) {
 	msg, userId = r.Bot.CathEvents(ctx, req)
-	// fmt.Println(userId)
-
 	return
 }
 
@@ -129,16 +132,20 @@ func (r *CommonRepository) UserCheck(ctx context.Context, userId string) bool {
 func (r *CommonRepository) StartUser(ctx context.Context, userId string) {
 	var i int
 	// UserIdが登録されているかのチェック i=0 は登録なし i=1 は登録ずみ
-	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
-	if err != nil {
-		fmt.Println(err, "StartUser:QueryRow")
-	}
-	if i == 0 {
-		_, err := r.DB.Exec(ctx, INSERT_USERS, userId, 0)
+	err := r.DB.ExecWithTx(func(*sql.Tx) error {
+		err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
 		if err != nil {
-			fmt.Println(err, "StartUser:Exec")
+			fmt.Println(err, "StartUser:QueryRow")
 		}
-	}
+		if i == 0 {
+			_, err := r.DB.Exec(ctx, INSERT_USERS, userId, 0)
+			if err != nil {
+				fmt.Println(err, "StartUser:Exec")
+			}
+		}
+		return err
+	})
+	fmt.Println(err)
 }
 
 func (r *CommonRepository) EndUser(ctx context.Context, userId string) {

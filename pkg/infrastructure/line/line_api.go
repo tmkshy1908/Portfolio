@@ -83,11 +83,11 @@ func (bot *LineConf) MsgReply(msg string, userId string) {
 }
 
 func (bot *LineConf) WaitEvents(ctx context.Context) (day time.Time, location string, title string, act string, info string) {
-	str := "2020/03/23"
+	str := "2010/08/20"
 	layout := "2006/01/02"
 	day, _ = time.Parse(layout, str)
 	location = "渋谷"
-	title = "TAROUふぇすてぃばる"
+	title = "Transaction テストおおお"
 	act = "山田太郎　田中たろう　TaroSakamoto"
 	info = "20:00 START"
 	return

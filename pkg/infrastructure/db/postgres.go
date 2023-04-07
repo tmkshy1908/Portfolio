@@ -66,22 +66,22 @@ func (h *SqlConf) QueryRow(ctx context.Context, query string, args ...interface{
 func (h *SqlConf) ExecWithTx(txFunc func(*sql.Tx) error) (err error) {
 	tx, err := h.Conn.Begin()
 	if err != nil {
-		log.Println(err)
+		log.Println(err, "withTx ")
 		return
 	}
 
 	defer func() {
 		if p := recover(); p != nil {
-			log.Println(err)
+			fmt.Println(err, "Rollback")
 			err = tx.Rollback()
 			panic(p)
 		} else if err != nil {
-			log.Println(err)
+			fmt.Println(err, "Rollback err")
 			if rollbackErr := tx.Rollback(); rollbackErr != nil {
 				err = rollbackErr
 			}
 		} else {
-			log.Println(err)
+			fmt.Println(err, "commit")
 			err = tx.Commit()
 		}
 	}()
