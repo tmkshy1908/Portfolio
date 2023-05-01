@@ -42,7 +42,6 @@ func (r *CommonRepository) Find(ctx context.Context) (contents []*domain.Content
 	for rows.Next() {
 		contentsTable := domain.Contents{}
 		if err = rows.Scan(
-			&contentsTable.ID,
 			&contentsTable.Contents_Day,
 			&contentsTable.Location,
 			&contentsTable.EventTitle,
