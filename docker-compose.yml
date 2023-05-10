@@ -4,14 +4,20 @@ services:
     build:
      context: .
      dockerfile: Dockerfile
+    #  volumes: 
+    #   - ./:/cmd/botapi
+    container_name: app-container
+    hostname: web-server
     ports:
      - "8080:8080"
     tty: true
   db:
     image: postgres
+    container_name: db-container
     environment:
       POSTGRES_USER: yamadatarou
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: line_bot
+    hostname: db-server
     ports:
       - "8000:8000"

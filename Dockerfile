@@ -1,9 +1,12 @@
-FROM golang:1.16.3-buster
+FROM golang:1.19-buster
 
-WORKDIR /cmd/botapi
 
-COPY /cmd/botapi /app
+RUN mkdir app
+
+WORKDIR /app
+
+COPY . /app
 
 EXPOSE 8080
 
-CMD ["go", "run", "cmd/botapi/main.go"]
+CMD ["go", "run", "/app/cmd/botapi/main.go"]
