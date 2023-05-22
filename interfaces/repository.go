@@ -119,13 +119,14 @@ func (r *CommonRepository) UserCheck(ctx context.Context, userId string) bool {
 	// UserIdが登録されているかのチェック i=0 は登録なし i=1 は登録ずみ
 	err := r.DB.QueryRow(ctx, USER_CHECK, userId).Scan(&i)
 	if err != nil {
-		fmt.Println(err, "クエリ")
+		fmt.Println(err, "idチェック")
 	}
 	if i == 0 {
 		return false
 	} else {
 		return true
 	}
+	// return true
 }
 
 func (r *CommonRepository) StartUser(ctx context.Context, userId string) {
