@@ -88,7 +88,7 @@ func (bot *LineConf) WaitEvents(ctx context.Context) (day time.Time, location st
 	day, _ = time.Parse(layout, str)
 	location = "渋谷"
 	title = "Transaction テストおおお"
-	act = "山田太郎　田中たろう　TaroSakamoto"
+	act = "編集しました編集しました"
 	info = "20:00 START"
 	return
 }
