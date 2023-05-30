@@ -14,6 +14,9 @@ services:
     build:
       context: .
       dockerfile: dockerDB/Dockerfile
+    volumes:
+      - ./dockerDB:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
     tty: true
     environment:
       POSTGRES_USER: yamadatarou
@@ -22,3 +25,6 @@ services:
     hostname: db-server
     ports:
       - "5432:5432"
+
+volumes:
+ db-data:
