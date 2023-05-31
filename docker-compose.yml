@@ -10,11 +10,13 @@ services:
      - "8080:8080"
     tty: true
   db:
-    image: postgres:12.0
     container_name: db-container
     build:
       context: .
-      # command: docker cp ./dockerDB/init.sql db-container:/docker-entrypoint-initdb.d/
+      dockerfile: dockerDB/Dockerfile
+    volumes:
+      - ./dockerDB:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
     tty: true
     environment:
       POSTGRES_USER: yamadatarou
@@ -23,3 +25,6 @@ services:
     hostname: db-server
     ports:
       - "5432:5432"
+
+volumes:
+ db-data:
