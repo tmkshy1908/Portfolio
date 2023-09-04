@@ -25,6 +25,14 @@ services:
     hostname: db-server
     ports:
       - "5432:5432"
+  envoy:
+    build:
+     context: .
+     dockerfile: Dockerfile
+    ports:
+      - "10000:10000"
+    volumes:
+      - ./envoy.yaml:/app/etc/envoy/envoy.yaml
 
 volumes:
  db-data:
